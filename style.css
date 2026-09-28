@@ -163,11 +163,12 @@ button.btn{cursor:pointer;font:inherit;font-weight:500;justify-self:start}
 .shot img{display:block;width:100%;height:auto}
 dialog.zoom{width:96vw;max-width:none;max-height:94vh;padding:0;background:#fff;overflow:auto;cursor:zoom-out}
 dialog.zoom img{display:block;width:100%;min-width:900px;height:auto}
-.docs{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.8rem;align-items:start}
 .doc{display:flex;flex-direction:column;gap:.5rem;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:.8rem;transition:border-color .2s,transform .2s}
 .doc:hover{border-color:var(--accent);transform:translateY(-3px)}
 .thumb{position:relative;aspect-ratio:3/4;border-radius:5px;overflow:hidden;background:var(--bg);display:grid;place-items:center;color:var(--muted);font-family:var(--mono);font-size:.78rem}
-.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.thumb:has(img){aspect-ratio:auto;display:block;font-size:0}
+.thumb img{display:block;width:100%;height:auto}
 .doc b{font-size:.95rem;line-height:1.3}
 .doc span.d{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
 .tl-more{display:inline-block;margin-top:.4rem;font-size:.88rem;color:var(--accent)}
@@ -189,3 +190,5 @@ dialog.zoom img{display:block;width:100%;min-width:900px;height:auto}
   .dd-menu::before{display:none}
   .dd-menu a{padding:.6rem 1.25rem}
 }
+body[data-page="formation"] main .wrap{max-width:1360px;padding:0 1rem}
+.doc span.d{overflow-wrap:anywhere}
