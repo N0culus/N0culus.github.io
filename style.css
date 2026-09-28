@@ -170,3 +170,19 @@ button.btn{cursor:pointer;font:inherit;font-weight:500;justify-self:start}
 .tl-more{display:inline-block;margin-top:.4rem;font-size:.88rem;color:var(--accent)}
 .tl-more:hover{text-decoration:underline}
 @media(max-width:720px){.docs{grid-template-columns:1fr 1fr}}
+
+/* Menu déroulant Parcours */
+.links li{position:relative}
+.dd>a::after{content:"▾";font-size:.7em;margin-left:.35rem;color:var(--accent)}
+.dd-menu{position:absolute;top:100%;left:-1rem;width:21rem;list-style:none;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.4rem;box-shadow:0 12px 30px rgba(0,0,0,.4);opacity:0;visibility:hidden;transform:translateY(6px);transition:opacity .18s,transform .18s,visibility .18s}
+.dd-menu::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
+.dd:hover .dd-menu,.dd:focus-within .dd-menu{opacity:1;visibility:visible;transform:none}
+.dd-menu a{display:block;padding:.6rem .8rem;border:0;border-radius:6px;color:var(--text);font-size:.9rem;line-height:1.35}
+.dd-menu a:hover,.dd-menu a[aria-current]{background:rgba(14,165,233,.12);color:var(--accent)}
+.dd-menu small{display:block;font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+@media(max-width:720px){
+  .dd>a::after{display:none}
+  .dd-menu{position:static;width:auto;opacity:1;visibility:visible;transform:none;border:0;box-shadow:none;background:none;padding:0 0 .4rem 1.25rem}
+  .dd-menu::before{display:none}
+  .dd-menu a{padding:.6rem 1.25rem}
+}
