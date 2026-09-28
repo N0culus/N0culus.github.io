@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CTF &amp; Cybersécurité — Léo Gauthier</title>
+<meta name="description" content="CTF, HackTheBox, préparation OSCP et writeups de Léo Gauthier.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="ctf">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo">leo@portfolio:~$</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li><a href="index.html#about">À propos</a></li><li><a href="index.html#parcours">Parcours</a></li><li><a href="index.html#skills">Compétences</a></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html" class="active">CTF</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <h1>CTF &amp; Cybersécurité</h1>
+    <p>Là où la théorie devient pratique : compétitions, machines d'entraînement et préparation de la certification OSCP.</p>
+  </div>
+</header>
+
+<section class="sub" id="htb">
+  <div class="wrap">
+    <h2>HackTheBox</h2>
+    <div class="panel">
+      <p>Je m'entraîne régulièrement sur HackTheBox pour pratiquer l'énumération, l'exploitation et l'élévation de privilèges.</p>
+      <!-- Remplacer par ton profil public HackTheBox. Tu peux aussi ajouter ici une capture d'écran de ton profil. -->
+      <a class="btn ghost" href="https://app.hackthebox.com/users/VOTRE_ID" target="_blank" rel="noopener">Voir mon profil HackTheBox</a>
+    </div>
+  </div>
+</section>
+
+<section class="sub" id="organisation">
+  <div class="wrap">
+    <h2>Organisateur : « Une nuit pour hacker »</h2>
+    <div class="panel">
+      <p>En 2026, j'ai co-organisé un CTF ouvert à plus de 150 participants. Nous avons conçu les challenges et monté l'infrastructure qui les héberge.</p>
+      <div class="facts">
+        <div><b>150+</b><span>participants</span></div>
+        <div><b>130+</b><span>challenges</span></div>
+        <div><b>3</b><span>univers : AD, WiFi, Web</span></div>
+      </div>
+      <p>L'ensemble tourne sur Proxmox, derrière un Fortigate.</p>
+      <a class="back" href="index.html#projets">Retour aux projets</a>
+    </div>
+  </div>
+</section>
+
+<section class="sub" id="oscp">
+  <div class="wrap">
+    <h2>Préparation OSCP</h2>
+    <div class="panel">
+      <p>Je prépare la certification OSCP (en cours). Elle demande une méthode rigoureuse plus que des outils : c'est ce que je travaille à chaque machine.</p>
+      <div class="steps">
+        <div><h4>Énumérer</h4><p>Cartographier les services et repérer la surface d'attaque.</p></div>
+        <div><h4>Exploiter</h4><p>Obtenir un premier accès, puis progresser dans le système.</p></div>
+        <div><h4>Documenter</h4><p>Rendre chaque étape reproductible, comme dans un rapport de pentest.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sub" id="writeup">
+  <div class="wrap">
+    <h2>Mini-writeup</h2>
+    <div class="panel">
+      <p class="wip-note">// modèle à remplacer par un vrai writeup</p>
+      <h3>[Nom du challenge]</h3>
+      <p>[Plateforme ou événement, catégorie, difficulté]</p>
+      <div class="steps">
+        <div><h4>Reconnaissance</h4><p>[Ce que j'ai observé et comment.]</p><pre>nmap -sC -sV -oN scan.txt [cible]</pre></div>
+        <div><h4>Exploitation</h4><p>[La faille identifiée et comment elle a été exploitée.]</p></div>
+        <div><h4>Ce que j'en retiens</h4><p>[Le correctif côté défense et la leçon retenue.]</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

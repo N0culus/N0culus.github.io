@@ -8,102 +8,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#0d1b2a; --bg2:#12253a; --line:#1f3550; --accent:#0ea5e9;
-  --text:#f1f5f9; --muted:#94a3b8;
-  --sans:'DM Sans',system-ui,sans-serif; --mono:'DM Mono',ui-monospace,monospace;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;scroll-padding-top:72px}
-body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.65;-webkit-font-smoothing:antialiased}
-a{color:inherit;text-decoration:none}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.wrap{max-width:1040px;margin:0 auto;padding:0 1.25rem}
-section{padding:5.5rem 0}
-h2{font-size:clamp(1.7rem,4vw,2.3rem);letter-spacing:-.02em;margin-bottom:2.5rem;padding-left:1rem;border-left:3px solid var(--accent)}
-
-/* Navbar */
-nav{position:fixed;inset:0 0 auto 0;z-index:50;background:rgba(13,27,42,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
-.logo{font-family:var(--mono);font-weight:500;color:var(--accent)}
-.links{display:flex;gap:1.6rem;list-style:none}
-.links a{font-size:.92rem;color:var(--muted);padding:.3rem 0;border-bottom:2px solid transparent;transition:color .2s,border-color .2s}
-.links a:hover,.links a.active{color:var(--text);border-color:var(--accent)}
-.burger{display:none;background:none;border:0;color:var(--text);font-size:1.5rem;cursor:pointer}
-@media(max-width:720px){
-  .burger{display:block}
-  .links{position:absolute;top:60px;left:0;right:0;flex-direction:column;gap:0;background:var(--bg);border-bottom:1px solid var(--line);display:none}
-  .links.open{display:flex}
-  .links a{display:block;padding:.9rem 1.25rem;border:0}
-}
-
-/* Hero */
-#hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;padding:6rem 0 4rem}
-#net{position:absolute;inset:0;width:100%;height:100%}
-#hero .wrap{position:relative;z-index:1}
-#hero h1{font-size:clamp(2.8rem,9vw,5.6rem);line-height:1;letter-spacing:-.04em;font-weight:700}
-.role{font-family:var(--mono);font-size:clamp(1rem,2.6vw,1.35rem);color:var(--accent);margin:1.4rem 0 1rem;min-height:2em}
-.role::after{content:"";display:inline-block;width:.6ch;height:1.1em;background:var(--accent);margin-left:3px;vertical-align:text-bottom;animation:blink 1s steps(1) infinite}
-@keyframes blink{50%{opacity:0}}
-.tag{max-width:34rem;color:var(--muted);font-size:1.1rem}
-.cta{display:flex;flex-wrap:wrap;gap:.9rem;margin-top:2.2rem}
-.btn{display:inline-block;padding:.8rem 1.5rem;border-radius:6px;font-weight:500;border:1px solid var(--accent);transition:background .2s,color .2s,transform .2s}
-.btn.primary{background:var(--accent);color:#04121d}
-.btn.primary:hover{background:#38bdf8}
-.btn.ghost{color:var(--accent)}
-.btn.ghost:hover{background:rgba(14,165,233,.12)}
-
-/* À propos */
-#about{background:var(--bg2)}
-.about{display:grid;grid-template-columns:220px 1fr;gap:3rem;align-items:start}
-.photo{width:220px;height:220px;border-radius:50%;border:2px solid var(--accent);background:var(--bg) center/cover;display:grid;place-items:center;color:var(--muted);font-family:var(--mono);font-size:.8rem;text-align:center;box-shadow:0 0 0 8px rgba(14,165,233,.08)}
-.about p{color:#cbd5e1;max-width:62ch;margin-bottom:1rem}
-.info{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin:1.2rem 0 0;font-family:var(--mono);font-size:.88rem;color:var(--muted)}
-.info a:hover{color:var(--accent)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:3rem}
-.stat{border:1px solid var(--line);border-radius:8px;padding:1.4rem 1.2rem;background:var(--bg)}
-.stat b{display:block;font-size:2.3rem;line-height:1.1;color:var(--accent);letter-spacing:-.03em}
-.stat span{color:var(--muted);font-size:.92rem}
-@media(max-width:720px){
-  .about{grid-template-columns:1fr;justify-items:center;text-align:left;gap:2rem}
-  .stats{grid-template-columns:1fr}
-}
-
-/* Timeline */
-.tl{position:relative;list-style:none;padding-left:3.5rem}
-.tl::before{content:"";position:absolute;left:1.1rem;top:.5rem;bottom:.5rem;width:2px;background:var(--line)}
-.tl li{position:relative;margin-bottom:2rem;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s}
-.tl li.in{opacity:1;transform:none}
-.ico{position:absolute;left:-3.5rem;top:0;width:2.3rem;height:2.3rem;border-radius:50%;background:var(--bg);border:2px solid var(--line);display:grid;place-items:center;color:var(--muted)}
-.ico svg{width:1.05rem;height:1.05rem}
-.tl li.work .ico{border-color:var(--accent);color:var(--accent)}
-.tl li.now .ico{background:var(--accent);color:#04121d}
-.date{font-family:var(--mono);font-size:.82rem;color:var(--accent)}
-.tl h3{font-size:1.12rem;margin:.15rem 0}
-.tl p{color:var(--muted);font-size:.95rem}
-.badge{display:inline-block;margin-left:.5rem;font-family:var(--mono);font-size:.72rem;border:1px solid var(--accent);color:var(--accent);border-radius:99px;padding:0 .55rem;vertical-align:middle}
-
-footer{border-top:1px solid var(--line);padding:2rem 0;text-align:center;color:var(--muted);font-size:.85rem}
-@media(prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}
-  .tl li{opacity:1;transform:none;transition:none}
-  .role::after{animation:none}
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body data-page="home">
 
 <nav>
   <div class="wrap">
     <a href="#hero" class="logo">leo@portfolio:~$</a>
     <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
-    <ul class="links">
-      <li><a href="#hero">Accueil</a></li>
-      <li><a href="#about">À propos</a></li>
-      <li><a href="#parcours">Parcours</a></li>
-      <!-- À ajouter plus tard : Compétences, Projets, CTF, Contact -->
-    </ul>
+    <ul class="links"><li><a href="#hero">Accueil</a></li><li><a href="#about">À propos</a></li><li><a href="#parcours">Parcours</a></li><li><a href="#skills">Compétences</a></li><li><a href="#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="#contact">Contact</a></li></ul>
   </div>
 </nav>
 
@@ -171,86 +84,72 @@ footer{border-top:1px solid var(--line);padding:2rem 0;text-align:center;color:v
         <h3>BTS SIO option SISR</h3>
         <p>Nextech, Avignon, en alternance chez Absys Informatique. Infrastructure multi-sites, virtualisation, annuaire et réseau.</p>
       </li>
+      <li>
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V9l8-5 8 5v11"/><path d="M9 20v-6h6v6"/></svg></span>
+        <div class="date">2022</div>
+        <h3>Baccalauréat général, mention Assez Bien</h3>
+        <p>Lycée Victor Hugo, Carpentras.</p>
+      </li>
     </ol>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <h2>Compétences</h2>
+    <div class="skills">
+      <div class="group"><h3><i>🖥️</i>Systèmes</h3><div class="chips"><span>Windows Server</span><span>Linux Debian</span><span>Windows 10/11</span></div></div>
+      <div class="group"><h3><i>📦</i>Virtualisation</h3><div class="chips"><span>Proxmox</span><span>Nutanix</span><span>Docker</span><span>GNS3</span></div></div>
+      <div class="group"><h3><i>🛡️</i>Réseau &amp; Sécurité</h3><div class="chips"><span>Fortinet</span><span>pfSense</span><span>VPN IPsec</span><span>VLAN</span><span>HAProxy</span><span>Stormshield</span><span>Suricata</span></div></div>
+      <div class="group"><h3><i>☁️</i>Annuaire &amp; Cloud</h3><div class="chips"><span>Active Directory</span><span>DNS/DHCP</span><span>GPO</span><span>Microsoft 365</span><span>Exchange</span></div></div>
+      <div class="group"><h3><i>📡</i>Sauvegarde &amp; Supervision</h3><div class="chips"><span>Veeam B&amp;R</span><span>Zabbix</span><span>GLPI</span><span>Wireshark</span><span>NtopNG</span></div></div>
+      <div class="group"><h3><i>💻</i>Développement</h3><div class="chips"><span>Python</span><span>PHP</span><span>JavaScript</span><span>SQL</span><span>C</span><span>Bash</span></div></div>
+      <div class="group"><h3><i>🔐</i>Cybersécurité</h3><div class="chips"><span>Pentest</span><span>Audit</span><span>CTF</span><span>Cryptographie</span><span class="wip">OSCP (en cours)</span></div></div>
+      <div class="group"><h3><i>⚙️</i>DevOps</h3><div class="chips"><span>Ansible</span><span>Git/GitHub</span><span>Docker</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="projets">
+  <div class="wrap">
+    <h2>Projets</h2>
+    <div class="projects" id="grid"></div>
+  </div>
+</section>
+
+<dialog id="modal" aria-labelledby="m-title">
+  <button class="x" aria-label="Fermer">×</button>
+  <div class="date" id="m-date"></div>
+  <h3 id="m-title"></h3>
+  <div id="m-body"></div>
+  <div class="chips" id="m-tags"></div>
+</dialog>
+
+<section id="contact">
+  <div class="wrap">
+    <h2>Contact</h2>
+    <div class="contact">
+      <!-- Remplacer VOTRE_ID par l'identifiant du formulaire créé sur formspree.io -->
+      <form id="form" action="https://formspree.io/f/VOTRE_ID" method="POST">
+        <label>Nom<input type="text" name="name" required autocomplete="name"></label>
+        <label>Email<input type="email" name="email" required autocomplete="email"></label>
+        <label>Message<textarea name="message" required></textarea></label>
+        <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <button class="btn primary" type="submit">Envoyer le message</button>
+        <p class="status" id="status" role="status"></p>
+      </form>
+      <div class="side">
+        <a class="row" href="mailto:contact@leogauthier.fr"><b>Email</b><span>contact@leogauthier.fr</span></a>
+        <a class="row" href="https://www.linkedin.com/in/VOTRE-PROFIL" target="_blank" rel="noopener"><b>LinkedIn</b><span>Voir mon profil</span></a>
+        <a class="row" href="https://github.com/VOTRE-PSEUDO" target="_blank" rel="noopener"><b>GitHub</b><span>Voir mes dépôts</span></a>
+        <a class="row" href="cv-leo-gauthier.pdf" download><b>Télécharger mon CV</b><span>PDF</span></a>
+      </div>
+    </div>
   </div>
 </section>
 
 <footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
 
-<script>
-/* Menu mobile */
-const burger=document.querySelector('.burger'),links=document.querySelector('.links');
-burger.addEventListener('click',()=>{const o=links.classList.toggle('open');burger.setAttribute('aria-expanded',o)});
-links.addEventListener('click',()=>links.classList.remove('open'));
-document.getElementById('y').textContent=new Date().getFullYear();
-
-const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-
-/* Typewriter */
-const roles=["Étudiant Manager en Ingénierie Informatique","Futur Expert Cybersécurité","Alternant Systèmes & Réseaux"];
-const el=document.getElementById('role');
-if(reduce){el.textContent=roles[0]}else{
-  let r=0,c=0,del=false;
-  (function tick(){
-    const w=roles[r];
-    el.textContent=w.slice(0,c);
-    if(!del&&c===w.length){del=true;return setTimeout(tick,1600)}
-    if(del&&c===0){del=false;r=(r+1)%roles.length}
-    c+=del?-1:1;
-    setTimeout(tick,del?28:60);
-  })();
-}
-
-/* Réseau de nœuds */
-(function(){
-  const cv=document.getElementById('net'),ctx=cv.getContext('2d');
-  let W,H,pts=[],mouse={x:-999,y:-999};
-  function size(){
-    const d=devicePixelRatio||1;W=cv.clientWidth;H=cv.clientHeight;
-    cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);
-    const n=Math.min(90,Math.floor(W*H/14000));
-    pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35}));
-  }
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    for(const p of pts){
-      if(!reduce){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1}
-      ctx.fillStyle='rgba(14,165,233,.7)';ctx.beginPath();ctx.arc(p.x,p.y,1.6,0,6.283);ctx.fill();
-    }
-    for(let i=0;i<pts.length;i++){
-      for(let j=i+1;j<pts.length;j++){
-        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
-        if(d<130){ctx.strokeStyle=`rgba(14,165,233,${.28*(1-d/130)})`;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke()}
-      }
-      const m=Math.hypot(pts[i].x-mouse.x,pts[i].y-mouse.y);
-      if(m<160){ctx.strokeStyle=`rgba(241,245,249,${.35*(1-m/160)})`;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(mouse.x,mouse.y);ctx.stroke()}
-    }
-    if(!reduce)requestAnimationFrame(draw);
-  }
-  addEventListener('resize',()=>{size();if(reduce)draw()});
-  document.getElementById('hero').addEventListener('mousemove',e=>{const b=cv.getBoundingClientRect();mouse.x=e.clientX-b.left;mouse.y=e.clientY-b.top});
-  size();draw();
-})();
-
-/* Nav active */
-const secs=[...document.querySelectorAll('header[id],section[id]')],navA=[...document.querySelectorAll('.links a')];
-const so=new IntersectionObserver(es=>es.forEach(e=>{
-  if(e.isIntersecting)navA.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id));
-}),{rootMargin:'-45% 0px -50% 0px'});
-secs.forEach(s=>so.observe(s));
-
-/* Timeline reveal */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.2});
-document.querySelectorAll('.tl li').forEach(li=>io.observe(li));
-
-/* Compteurs */
-const co=new IntersectionObserver(es=>es.forEach(e=>{
-  if(!e.isIntersecting)return;co.unobserve(e.target);
-  const t=+e.target.dataset.n,s=e.target.dataset.suffix||'';
-  if(reduce){e.target.textContent=t+s;return}
-  let st=null;(function f(ts){st=st||ts;const p=Math.min((ts-st)/1200,1);e.target.textContent=Math.round(t*(1-Math.pow(1-p,3)))+s;if(p<1)requestAnimationFrame(f)})(performance.now());
-}),{threshold:.6});
-document.querySelectorAll('.stat b').forEach(b=>co.observe(b));
-</script>
+<script src="script.js" defer></script>
 </body>
 </html>
