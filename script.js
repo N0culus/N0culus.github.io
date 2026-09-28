@@ -117,3 +117,16 @@ if(f)f.addEventListener('submit',async e=>{
     f.reset();st.className='status ok';st.textContent='Message envoyé, merci. Je vous répondrai rapidement.';
   }catch{st.className='status err';st.textContent="L'envoi a échoué. Écrivez-moi directement par email."}
 });
+
+/* Agrandir les schémas au clic */
+document.querySelectorAll('.shot img').forEach(img=>{
+  img.addEventListener('click',()=>{
+    const d=document.createElement('dialog');
+    d.className='zoom';
+    d.innerHTML=`<img src="${img.src}" alt="${img.alt}">`;
+    document.body.appendChild(d);
+    d.addEventListener('click',()=>d.close());
+    d.addEventListener('close',()=>d.remove());
+    d.showModal();
+  });
+});
