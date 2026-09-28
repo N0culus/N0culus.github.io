@@ -151,3 +151,22 @@ button.btn{cursor:pointer;font:inherit;font-weight:500;justify-self:start}
 .row span{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
 .hp{position:absolute;left:-9999px}
 @media(max-width:720px){.contact{grid-template-columns:1fr}}
+
+/* Pages formation */
+.meta{font-family:var(--mono);font-size:.85rem;color:var(--accent);margin-bottom:.8rem}
+.project{margin-bottom:1.5rem}
+.project h3{font-size:1.25rem;margin-bottom:.6rem}
+.project ul{margin:0 0 1.1rem 1.2rem;color:#cbd5e1}
+.project li{margin-bottom:.35rem}
+.shot{margin-top:1.2rem;border:1px dashed var(--line);border-radius:8px;aspect-ratio:16/8;display:grid;place-items:center;overflow:hidden;background:var(--bg);color:var(--muted);font-family:var(--mono);font-size:.8rem;position:relative}
+.shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.docs{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.doc{display:flex;flex-direction:column;gap:.5rem;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:.8rem;transition:border-color .2s,transform .2s}
+.doc:hover{border-color:var(--accent);transform:translateY(-3px)}
+.thumb{position:relative;aspect-ratio:3/4;border-radius:5px;overflow:hidden;background:var(--bg);display:grid;place-items:center;color:var(--muted);font-family:var(--mono);font-size:.78rem}
+.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.doc b{font-size:.95rem;line-height:1.3}
+.doc span.d{font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+.tl-more{display:inline-block;margin-top:.4rem;font-size:.88rem;color:var(--accent)}
+.tl-more:hover{text-decoration:underline}
+@media(max-width:720px){.docs{grid-template-columns:1fr 1fr}}
