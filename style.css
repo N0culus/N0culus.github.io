@@ -193,3 +193,33 @@ dialog.zoom img{display:block;width:100%;min-width:900px;height:auto}
 }
 body[data-page="formation"] main .wrap{max-width:1360px;padding:0 1rem}
 .doc span.d{overflow-wrap:anywhere}
+
+/* Élargit la navbar pour accueillir plus de liens */
+nav .wrap{max-width:1180px}
+@media(max-width:900px){.links{gap:1.1rem}}
+
+/* Page 404 */
+#notfound{min-height:100svh;display:flex;align-items:center;justify-content:center;text-align:center;padding:7rem 1.25rem 4rem;position:relative;overflow:hidden}
+#notfound .code{font-family:var(--mono);font-size:clamp(4.5rem,18vw,9rem);line-height:1;letter-spacing:-.04em;color:var(--accent);opacity:.9}
+#notfound .code .cursor{display:inline-block;width:.5ch;background:var(--accent);animation:blink 1s steps(1) infinite;margin-left:.15em}
+#notfound h1{font-size:clamp(1.4rem,4vw,2rem);margin:1rem 0 .6rem}
+#notfound p{color:var(--muted);max-width:34rem;margin:0 auto 2rem}
+#notfound pre{text-align:left;max-width:32rem;margin:0 auto 2rem;background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:1rem 1.2rem;font-family:var(--mono);font-size:.85rem;color:#94e2ff}
+#notfound pre .err{color:#f87171}
+#notfound .links2{display:flex;flex-wrap:wrap;gap:.6rem;justify-content:center;font-family:var(--mono);font-size:.85rem}
+#notfound .links2 a{border:1px solid var(--line);border-radius:6px;padding:.5rem 1rem;color:var(--muted);transition:border-color .2s,color .2s}
+#notfound .links2 a:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Veille */
+.article{margin-bottom:1.3rem;padding:1.6rem}
+.article header{display:flex;flex-wrap:wrap;gap:.6rem 1rem;align-items:baseline;margin-bottom:.6rem}
+.article h3{font-size:1.2rem}
+.article .date{font-size:.8rem}
+.article .excerpt{color:#cbd5e1;margin-bottom:.8rem}
+.article details summary{cursor:pointer;color:var(--accent);font-size:.9rem;font-weight:500;list-style:none}
+.article details summary::-webkit-details-marker{display:none}
+.article details summary::after{content:"Lire la suite ↓";}
+.article details[open] summary::after{content:"Réduire ↑"}
+.article details .full{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--line);color:#cbd5e1}
+.article details .full p{margin-bottom:.8rem}
+.article .chips{margin-top:.9rem}

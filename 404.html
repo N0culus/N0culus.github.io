@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page introuvable — Léo Gauthier</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body data-page="404">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo">leo@portfolio:~$</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li><a href="index.html#about">À propos</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#skills">Compétences</a></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="veille.html">Veille</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+
+<main>
+<section id="notfound">
+  <div class="wrap">
+    <div class="code" aria-hidden="true">404<span class="cursor"></span></div>
+    <h1>Cette page a été déplacée… ou n'a jamais existé.</h1>
+    <p>La ressource demandée est introuvable. Voici ce que la console dirait :</p>
+    <pre aria-hidden="true">$ curl -I <span id="path">/page</span>
+HTTP/1.1 <span class="err">404 Not Found</span></pre>
+    <div class="links2">
+      <a href="index.html">Accueil</a>
+      <a href="documentation.html">Documentation</a>
+      <a href="ctf.html">CTF</a>
+      <a href="index.html#contact">Contact</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+<script>
+try{document.getElementById('path').textContent=location.pathname||'/page'}catch(e){}
+</script>
+</body>
+</html>

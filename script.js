@@ -52,37 +52,24 @@ if(!el){}else if(reduce){el.textContent=roles[0]}else{
   size();draw();
 })();
 
-/* Projets + modale */
+/* Projets : chaque card renvoie vers la page de formation concernée */
 const projects=[
  {t:"CTF « Une nuit pour hacker »",d:"2026",s:"Co-organisation d'un CTF de plus de 150 participants et 130+ challenges : Active Directory, WiFi et Web.",
-  tags:["Proxmox","Fortigate","Active Directory","WiFi","Web"],
-  b:"<p>Co-organisation d'un événement CTF réunissant plus de 150 participants sur une nuit.</p><ul><li>Plus de 130 challenges répartis en trois univers : Active Directory, WiFi et Web</li><li>Infrastructure d'hébergement sur Proxmox, protégée et segmentée par un Fortigate</li></ul>"},
+  tags:["Proxmox","Fortigate","Active Directory","WiFi","Web"],link:"formation-manager.html"},
  {t:"Mémoire technique",d:"2025 – 2026",s:"Dans quelle mesure les entreprises peuvent-elles reprendre le contrôle de leurs données ?",
-  tags:["Souveraineté numérique","RGPD","Cloud souverain"],
-  b:"<p>Mémoire de fin d'études sur la question : « Dans quelle mesure les entreprises peuvent-elles reprendre le contrôle de leurs données ? »</p><ul><li>Souveraineté numérique et dépendance aux acteurs du cloud</li><li>Cadre du RGPD</li><li>Alternatives de cloud souverain</li></ul>"},
+  tags:["Souveraineté numérique","RGPD","Cloud souverain"],link:"formation-manager.html"},
  {t:"Projet ITWay",d:"2025",s:"Infrastructure entièrement dockerisée avec pare-feu, VLANs, DNS et messagerie, menée en SCRUM.",
-  tags:["Docker","Stormshield","Bind9","Postfix/Dovecot","Ansible","GNS3"],
-  b:"<p>Conception d'une infrastructure complète dockerisée, conduite avec la méthode SCRUM.</p><ul><li>Filtrage avec Stormshield et segmentation par VLANs</li><li>DNS Bind9 et messagerie Postfix/Dovecot</li><li>Déploiement automatisé avec Ansible</li><li>Maquettage réseau sous GNS3</li></ul>"},
+  tags:["Docker","Stormshield","Bind9","Postfix/Dovecot","Ansible","GNS3"],link:"formation-bachelor.html"},
  {t:"Infrastructure BTS multi-sites",d:"2024",s:"Infrastructure multi-sites redondante : VPN, annuaire, supervision, sauvegarde et DMZ.",
-  tags:["Proxmox","pfSense","Active Directory","GLPI","Zabbix","HAProxy","Veeam","FOG"],
-  b:"<p>Projet de fin de BTS SIO SISR : une infrastructure multi-sites pensée pour la haute disponibilité.</p><ul><li>Virtualisation Proxmox</li><li>pfSense avec VPN IPsec et CARP</li><li>Active Directory redondant</li><li>GLPI, Zabbix, HAProxy, DMZ IIS</li><li>Sauvegardes Veeam et déploiement de postes avec FOG</li></ul>"}
+  tags:["Proxmox","pfSense","Active Directory","GLPI","Zabbix","HAProxy","Veeam","FOG"],link:"formation-bts.html"}
 ];
 const tag=a=>a.map(x=>`<span>${x}</span>`).join('');
-const grid=document.getElementById('grid'),dlg=document.getElementById('modal');
-if(grid)projects.forEach((p,i)=>{
-  const b=document.createElement('button');b.className='card';b.type='button';
-  b.innerHTML=`<span class="date">${p.d}</span><h3>${p.t}</h3><p>${p.s}</p><div class="chips">${tag(p.tags)}</div><span class="more">En savoir plus</span>`;
-  b.onclick=()=>{
-    document.getElementById('m-date').textContent=p.d;
-    document.getElementById('m-title').textContent=p.t;
-    document.getElementById('m-body').innerHTML=p.b;
-    document.getElementById('m-tags').innerHTML=tag(p.tags);
-    dlg.showModal();
-  };
-  grid.appendChild(b);
+const grid=document.getElementById('grid');
+if(grid)projects.forEach(p=>{
+  const a=document.createElement('a');a.className='card';a.href=p.link;
+  a.innerHTML=`<span class="date">${p.d}</span><h3>${p.t}</h3><p>${p.s}</p><div class="chips">${tag(p.tags)}</div><span class="more">En savoir plus →</span>`;
+  grid.appendChild(a);
 });
-if(dlg){dlg.querySelector('.x').onclick=()=>dlg.close();
-dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()})}
 
 /* Nav active */
 const secs=[...document.querySelectorAll('header[id],section[id]')],navA=[...document.querySelectorAll('.links a')];
@@ -116,17 +103,4 @@ if(f)f.addEventListener('submit',async e=>{
     if(!r.ok)throw 0;
     f.reset();st.className='status ok';st.textContent='Message envoyé, merci. Je vous répondrai rapidement.';
   }catch{st.className='status err';st.textContent="L'envoi a échoué. Écrivez-moi directement par email."}
-});
-
-/* Agrandir les schémas au clic */
-document.querySelectorAll('.shot img').forEach(img=>{
-  img.addEventListener('click',()=>{
-    const d=document.createElement('dialog');
-    d.className='zoom';
-    d.innerHTML=`<img src="${img.src}" alt="${img.alt}">`;
-    document.body.appendChild(d);
-    d.addEventListener('click',()=>d.close());
-    d.addEventListener('close',()=>d.remove());
-    d.showModal();
-  });
 });
