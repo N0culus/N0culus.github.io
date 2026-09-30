@@ -60,18 +60,47 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 }
 
 /* Timeline */
-.tl{position:relative;list-style:none;padding-left:3.5rem}
-.tl::before{content:"";position:absolute;left:1.1rem;top:.5rem;bottom:.5rem;width:2px;background:var(--line)}
-.tl li{position:relative;margin-bottom:2rem;opacity:0;transform:translateY(14px);transition:opacity .5s,transform .5s}
+.exp-highlight{max-width:760px;margin:0 auto 2.2rem;display:flex;gap:1.3rem;background:var(--bg2);border:1px solid var(--accent);border-radius:14px;padding:1.6rem 1.8rem;box-shadow:0 8px 24px rgba(14,165,233,.08)}
+.exp-logo{flex:none;width:5.5rem;height:5.5rem;border-radius:14px;background:#fff;border:2px solid var(--accent);box-shadow:0 6px 18px rgba(0,0,0,.4);display:grid;place-items:center;overflow:hidden}
+.exp-logo img{width:100%;height:100%;object-fit:contain;padding:.55rem;background:#fff}
+.exp-logo .ini{display:none;font-family:var(--mono);font-size:1.05rem;color:#0d1b2a;font-weight:700}
+.exp-logo.noimg img{display:none}
+.exp-logo.noimg .ini{display:block}
+.exp-tag{display:block;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem}
+.exp-body h3{font-size:1.2rem;margin-bottom:.35rem}
+.exp-org{font-family:var(--mono);font-size:.82rem;color:var(--muted);margin-bottom:.6rem}
+.exp-body p{color:#cbd5e1;font-size:.94rem}
+
+.tl{list-style:none;position:relative;padding:0;max-width:760px;margin:0 auto}
+.tl::before{content:"";position:absolute;top:.2rem;bottom:.2rem;left:2.25rem;width:2px;background:var(--line)}
+.tl-fill{position:absolute;top:.2rem;left:2.25rem;width:2px;height:0;background:var(--accent);transition:height .6s ease}
+.tl li{position:relative;padding:0 0 2.4rem 6rem;opacity:0;transform:translateY(18px);transition:opacity .5s ease,transform .5s ease;transition-delay:calc(var(--i,0)*80ms)}
 .tl li.in{opacity:1;transform:none}
-.ico{position:absolute;left:-3.5rem;top:0;width:2.3rem;height:2.3rem;border-radius:50%;background:var(--bg);border:2px solid var(--line);display:grid;place-items:center;color:var(--muted)}
-.ico svg{width:1.05rem;height:1.05rem}
-.tl li.work .ico{border-color:var(--accent);color:var(--accent)}
-.tl li.now .ico{background:var(--accent);color:#04121d}
-.date{font-family:var(--mono);font-size:.82rem;color:var(--accent)}
-.tl h3{font-size:1.12rem;margin:.15rem 0}
-.tl p{color:var(--muted);font-size:.95rem}
-.badge{display:inline-block;margin-left:.5rem;font-family:var(--mono);font-size:.72rem;border:1px solid var(--accent);color:var(--accent);border-radius:99px;padding:0 .55rem;vertical-align:middle}
+.dot{position:absolute;left:0;top:0;width:4.5rem;height:4.5rem;border-radius:14px;background:#fff;border:2px solid var(--line);box-shadow:0 6px 18px rgba(0,0,0,.45);display:grid;place-items:center;overflow:hidden;z-index:2}
+.dot img{width:100%;height:100%;object-fit:contain;padding:.5rem;background:#fff}
+.dot .ini{display:none;font-family:var(--mono);font-size:1rem;color:#0d1b2a;font-weight:700}
+.dot.noimg img{display:none}
+.dot.noimg .ini{display:block}
+.dot.now{border-color:var(--accent)}
+
+.card3{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:1.4rem 1.5rem;transition:border-color .2s}
+.tl li:hover .card3{border-color:var(--accent)}
+.card3.now{border-color:var(--accent)}
+.date{font-family:var(--mono);font-size:.85rem;color:var(--accent);margin-bottom:.5rem}
+.card3 h3{font-size:1.08rem;margin-bottom:.35rem}
+.card3 p{color:var(--muted);font-size:.92rem}
+.parallel{display:block;font-size:.78rem;color:var(--muted);font-style:italic;margin-bottom:.6rem}
+.tl-more3{display:inline-block;margin-top:.6rem;font-size:.85rem;color:var(--accent)}
+.tl-more3:hover{text-decoration:underline}
+.badge3{margin-left:.4rem;font-family:var(--mono);font-size:.65rem;border:1px solid var(--accent);color:var(--accent);border-radius:99px;padding:0 .45rem;vertical-align:middle}
+
+@media(max-width:560px){
+  .exp-highlight{flex-direction:column;padding:1.3rem}
+  .exp-logo{width:4rem;height:4rem}
+  .dot{width:3.4rem;height:3.4rem;border-radius:11px}
+  .tl::before,.tl-fill{left:1.7rem}
+  .tl li{padding-left:4.6rem}
+}
 
 /* Compétences */
 #skills{background:var(--bg2)}
@@ -112,6 +141,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;text-align:center;color:v
   html{scroll-behavior:auto}
   .tl li{opacity:1;transform:none;transition:none}
   .role::after{animation:none}
+  .tl-fill{transition:none}
 }
 
 /* Pages secondaires */
