@@ -147,7 +147,7 @@ footer{border-top:1px solid var(--line);padding:2rem 0;text-align:center;color:v
 /* Pages secondaires */
 .page-head{padding:8rem 0 1.5rem}
 .page-head h1{font-size:clamp(2.2rem,6vw,3.6rem);letter-spacing:-.03em;line-height:1.05}
-.page-head p{color:var(--muted);max-width:56ch;margin-top:1rem;font-size:1.05rem}
+.page-head p{color:var(--muted);margin-top:1rem;font-size:1.05rem}
 .sub{padding:2.5rem 0}
 .sub h2{font-size:1.5rem;margin-bottom:1.5rem}
 .panel{background:var(--bg2);border:1px solid var(--line);border-radius:8px;padding:1.6rem}
