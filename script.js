@@ -79,8 +79,23 @@ const so=new IntersectionObserver(es=>es.forEach(e=>{
 if(document.body.dataset.page==='home')secs.forEach(s=>so.observe(s));
 
 /* Timeline reveal */
-const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.2});
-document.querySelectorAll('.tl li').forEach(li=>io.observe(li));
+const tl=document.getElementById('tl');
+if(tl){
+  const fill=document.createElement('div');fill.className='tl-fill';tl.prepend(fill);
+  const items=[...tl.querySelectorAll('li')];
+  if(reduce){
+    items.forEach(li=>li.classList.add('in'));
+    fill.style.height='100%';
+  }else{
+    const io=new IntersectionObserver(es=>{
+      es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')});
+      let max=0;
+      items.forEach(li=>{if(li.classList.contains('in'))max=Math.max(max,li.offsetTop+li.offsetHeight/2)});
+      fill.style.height=max+'px';
+    },{threshold:.35});
+    items.forEach(li=>io.observe(li));
+  }
+}
 
 /* Compteurs */
 const co=new IntersectionObserver(es=>es.forEach(e=>{
