@@ -15,7 +15,7 @@ const projects=[
  {t:"Projet ITWay",d:"2025",s:"Infrastructure entièrement dockerisée avec pare-feu, VLANs, DNS et messagerie, menée en SCRUM.",
   tags:["Docker","Stormshield","Bind9","Postfix/Dovecot","Ansible","GNS3"],link:"formation-bachelor.html"},
  {t:"Infrastructure BTS multi-sites",d:"2024",s:"Infrastructure multi-sites redondante : VPN, annuaire, supervision, sauvegarde et DMZ.",
-  tags:["Proxmox","pfSense","Active Directory","GLPI","Zabbix","HAProxy","Veeam","FOG"],link:"formation-bts.html"}
+  tags:["Proxmox","pfSense","Active Directory","GLPI","Zabbix","HAProxy","Veeam"],link:"formation-bts.html"}
 ];
 const tag=a=>a.map(x=>`<span>${x}</span>`).join('');
 const grid=document.getElementById('grid');
@@ -73,3 +73,16 @@ if(f)f.addEventListener('submit',async e=>{
     f.reset();st.className='status ok';st.textContent='Message envoyé, merci. Je vous répondrai rapidement.';
   }catch{st.className='status err';st.textContent="L'envoi a échoué. Écrivez-moi directement par email."}
 });
+
+/* Zoom sur les captures (.shot) : clic pour agrandir, clic pour réduire */
+(function(){
+  const shots=[...document.querySelectorAll('.shot img')];
+  if(!shots.length)return;
+  const dlg=document.createElement('dialog');dlg.className='zoom';
+  const big=document.createElement('img');big.alt='';
+  dlg.appendChild(big);document.body.appendChild(dlg);
+  shots.forEach(img=>{
+    img.closest('.shot').addEventListener('click',()=>{big.src=img.currentSrc||img.src;dlg.showModal()});
+  });
+  dlg.addEventListener('click',()=>dlg.close());
+})();
