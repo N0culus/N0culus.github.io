@@ -330,3 +330,17 @@ code{font-family:var(--mono);font-size:.88em;background:var(--bg);padding:.05rem
 
 /* Panneau en pleine largeur (texte non bridé à 66ch) */
 .panel.full p{max-width:none}
+
+/* Participations CTF en présentiel */
+.events{display:grid;border-top:2px solid var(--ink)}
+.event{display:grid;grid-template-columns:9rem 1fr auto;gap:.6rem 1.5rem;align-items:baseline;padding:1.1rem .2rem;border-bottom:1px solid var(--line)}
+.event .ev-date{font-family:var(--mono);font-size:.8rem;color:var(--muted);padding-top:.15rem}
+.event .ev-body b{font-size:1.1rem}
+.event .ev-body span{display:block;font-size:.9rem;color:var(--muted)}
+.event .ev-body .ev-note{font-family:var(--mono);font-size:.78rem;margin-top:.25rem}
+.event .ev-role{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--soft);border:1px solid var(--line);padding:.2rem .55rem;white-space:nowrap}
+.event .ev-role.orga{background:var(--accent);color:#fff;border-color:var(--accent)}
+@media(max-width:620px){
+  .event{grid-template-columns:1fr auto;gap:.3rem 1rem}
+  .event .ev-date{grid-column:1/-1;order:-1}
+}
