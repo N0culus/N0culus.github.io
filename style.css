@@ -362,3 +362,13 @@ code{font-family:var(--mono);font-size:.88em;background:var(--bg);padding:.05rem
 .memo-card[hidden]{display:none}
 @media(max-width:900px){.memo-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.memo-grid{grid-template-columns:1fr}}
+
+/* Challenges CTF conçus */
+.chal-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem;margin-top:1.4rem}
+.chal-card{background:var(--bg2);border:1px solid var(--line);border-left:4px solid var(--accent);padding:1.3rem;display:flex;flex-direction:column;gap:.5rem}
+.chal-head{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}
+.chal-head .cat{color:var(--accent)}
+.chal-head .diff{color:var(--muted)}
+.chal-card h4{font-size:1.1rem;line-height:1.2}
+.chal-card p{color:var(--muted);font-size:.92rem;flex:1;margin:0}
+@media(max-width:720px){.chal-grid{grid-template-columns:1fr}}
