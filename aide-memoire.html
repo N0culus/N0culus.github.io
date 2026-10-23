@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aide-mémoire</title>
+<meta name="description" content="Mes fiches techniques réutilisables : Proxmox, Ceph, réseau, Linux, GNS3, Tailscale.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <h1>Aide-mémoire</h1>
+    <p>Mes fiches techniques réutilisables, celles que je ressors de temps en temps : Proxmox, Ceph, réseau, Linux, GNS3.</p>
+  </div>
+</header>
+<section class="sub"><div class="wrap">
+  <div class="bar">
+    <div class="filters" id="filters"><button data-f="all" aria-pressed="true">Tous (11)</button><button data-f="virtu" aria-pressed="false">Virtualisation (4)</button><button data-f="reseau" aria-pressed="false">Réseau (2)</button><button data-f="linux" aria-pressed="false">Linux (4)</button><button data-f="divers" aria-pressed="false">Divers (1)</button></div>
+    <input id="q" type="search" placeholder="Rechercher une fiche…" aria-label="Rechercher">
+  </div>
+  <p id="count"></p>
+  <div class="memo-grid" id="memos">
+      <a class="memo-card" data-t="virtu" data-s="proxmox avec kvm dans gns3 virtualisation activer l&#x27;accélération kvm et la virtualisation imbriquée pour proxmox dans gns3." href="memo-proxmox-kvm-gns3.html"><span class="cat">Virtualisation</span><b>Proxmox avec KVM dans GNS3</b><span class="d">Activer l&#x27;accélération KVM et la virtualisation imbriquée pour Proxmox dans GNS3.</span><span class="more">Lire →</span></a>
+      <a class="memo-card" data-t="virtu" data-s="relier son pc à gns3 virtualisation interface tap et routes pour accéder aux vlans d&#x27;une maquette gns3." href="memo-pc-dans-gns3.html"><span class="cat">Virtualisation</span><b>Relier son PC à GNS3</b><span class="d">Interface TAP et routes pour accéder aux VLANs d&#x27;une maquette GNS3.</span><span class="more">Lire →</span></a>
+      <a class="memo-card" data-t="virtu" data-s="initialiser proxmox virtualisation dépôts no-subscription, mises à jour et préparation d&#x27;un cluster." href="memo-init-proxmox.html"><span class="cat">Virtualisation</span><b>Initialiser Proxmox</b><span class="d">Dépôts no-subscription, mises à jour et préparation d&#x27;un cluster.</span><span class="more">Lire →</span></a>
+      <a class="memo-card" data-t="virtu" data-s="haute disponibilité ceph virtualisation ceph sur un cluster proxmox : moniteurs, managers, osd, pool." href="memo-ceph-ha.html"><span class="cat">Virtualisation</span><b>Haute disponibilité Ceph</b><span class="d">Ceph sur un cluster Proxmox : moniteurs, managers, OSD, pool.</span><span class="more">Lire →</span></a>
+      <a class="memo-card" data-t="reseau" data-s="vlans sur opnsense réseau créer et router des vlans sur opnsense : interfaces, dhcp, pare-feu." href="memo-vlans-opnsense.html"><span class="cat">Réseau</span><b>VLANs sur OPNsense</b><span class="d">Créer et router des VLANs sur OPNsense : interfaces, DHCP, pare-feu.</span><span class="more">Lire →</span></a>
+      <a class="memo-card" data-t="reseau" data-s="tailscale (subnet router) réseau installer tailscale et exposer un lan complet via un subnet router." href="memo-tailscale.html"><span class="cat">Réseau</span><b>Tailscale (subnet router)</b><span class="d">Installer Tailscale et exposer un LAN complet via un subnet router.</span><span class="more">Lire →</span></a>
+      <a class="memo-card" data-t="linux" data-s="configurer zsh + oh my zsh linux oh my zsh, plugins utiles et un .zshrc prêt à coller." href="memo-zsh.html"><span class="cat">Linux</span><b>Configurer ZSH + Oh My Zsh</b><span class="d">Oh My Zsh, plugins utiles et un .zshrc prêt à coller.</span><span class="more">Lire →</span></a>
+      <a class="memo-card" data-t="linux" data-s="installer arch linux linux installation pas à pas : partitionnement, base, grub, kde plasma." href="memo-arch-linux.html"><span class="cat">Linux</span><b>Installer Arch Linux</b><span class="d">Installation pas à pas : partitionnement, base, GRUB, KDE Plasma.</span><span class="more">Lire →</span></a>
+      <a class="memo-card" data-t="linux" data-s="créer un lanceur .desktop linux transformer un script en application lançable depuis le menu." href="memo-app-desktop.html"><span class="cat">Linux</span><b>Créer un lanceur .desktop</b><span class="d">Transformer un script en application lançable depuis le menu.</span><span class="more">Lire →</span></a>
+      <a class="memo-card" data-t="linux" data-s="effacer des disques ceph / lvm linux désactiver/supprimer les volumes ceph/lvm puis nettoyer les disques." href="memo-wipe-disk.html"><span class="cat">Linux</span><b>Effacer des disques Ceph / LVM</b><span class="d">Désactiver/supprimer les volumes Ceph/LVM puis nettoyer les disques.</span><span class="more">Lire →</span></a>
+      <a class="memo-card" data-t="divers" data-s="commandes utiles divers serveur http python, ports ouverts, netcat, netexec." href="memo-commandes-utiles.html"><span class="cat">Divers</span><b>Commandes utiles</b><span class="d">Serveur HTTP Python, ports ouverts, netcat, NetExec.</span><span class="more">Lire →</span></a>
+  </div>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+<script>
+(()=>{
+const btns=[...document.querySelectorAll('#filters button')],cards=[...document.querySelectorAll('.memo-card')],q=document.getElementById('q'),cnt=document.getElementById('count');
+let cur='all';
+function apply(){
+  const s=q.value.trim().toLowerCase();let n=0;
+  cards.forEach(c=>{const ok=(cur==='all'||c.dataset.t===cur)&&(!s||c.dataset.s.includes(s));c.hidden=!ok;if(ok)n++});
+  btns.forEach(b=>b.setAttribute('aria-pressed',b.dataset.f===cur));
+  cnt.textContent=n+' fiche'+(n>1?'s':'');
+}
+btns.forEach(b=>b.onclick=()=>{cur=b.dataset.f;history.replaceState(null,'',cur==='all'?location.pathname:'#'+cur);apply()});
+const h=location.hash.slice(1);if(btns.some(b=>b.dataset.f===h))cur=h;
+q.addEventListener('input',apply);apply();
+})();
+</script>
+</body>
+</html>

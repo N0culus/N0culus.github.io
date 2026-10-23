@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Proxmox avec KVM dans GNS3 — Aide-mémoire</title>
+<meta name="description" content="Activer l&#x27;accélération KVM et la virtualisation imbriquée pour Proxmox dans GNS3.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Aide-mémoire · Virtualisation</div>
+    <h1>Proxmox avec KVM dans GNS3</h1>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+<p><em>Objectif</em> : Configurer <strong>GNS3</strong> pour que <strong>Proxmox VE</strong> (installé dans une VM) puisse utiliser <strong>l'accélération KVM</strong>, avec vérifications sur l'hôte Ubuntu et commandes dans Proxmox.</p>
+<hr />
+<h3><strong>🔧 Prérequis</strong></h3>
+<ul>
+<li><strong>Hôte</strong> : Ubuntu (avec KVM activé).</li>
+<li><strong>GNS3</strong> : Installé et configuré avec QEMU.</li>
+<li><strong>Proxmox VE</strong> : Installé dans une VM GNS3 (template QEMU).</li>
+<li><strong>CPU</strong> : Intel (VT-x) ou AMD (AMD-V) avec virtualisation activée dans le BIOS.</li>
+</ul>
+<hr />
+<h3><strong>✅ Étape 1 : Vérifications sur la machine hôte (Ubuntu)</strong></h3>
+<p>Avant de configurer GNS3, assurez-vous que <strong>l'hôte Ubuntu supporte KVM et la virtualisation imbriquée</strong>.</p>
+<h3><strong>1. Vérifier que la virtualisation est activée dans le BIOS</strong></h3>
+<pre><code class="language-bash">egrep -c '(vmx|svm)' /proc/cpuinfo
+</code></pre>
+<ul>
+<li><strong>Résultat attendu</strong> : <code>≥1</code> (ex: <code>4</code> pour un CPU 4 cœurs avec VT-x).
+  <em>(Si <code>0</code>, activez </em><em>VT-x/AMD-V</em><em> dans le BIOS et redémarrez.)</em></li>
+</ul>
+<h3><strong>2. Vérifier que les modules KVM sont chargés</strong></h3>
+<pre><code class="language-bash">lsmod | grep kvm
+</code></pre>
+<ul>
+<li><strong>Résultat attendu</strong> :</li>
+<li>Pour <strong>Intel</strong> : <code>kvm_intel</code> doit apparaître.</li>
+<li>Pour <strong>AMD</strong> : <code>kvm_amd</code> doit apparaître.</li>
+<li><strong>Si absent</strong>, chargez le module manuellement :
+  <code>bash
+  sudo modprobe kvm_intel  # Intel
+  # ou
+  sudo modprobe kvm_amd    # AMD</code></li>
+</ul>
+<h3><strong>3. Activer la virtualisation imbriquée (nested virtualization)</strong></h3>
+<p>Par défaut, Ubuntu désactive la virtualisation imbriquée pour des raisons de sécurité.
+<strong>Pour l'activer</strong> (nécessaire pour que GNS3 puisse transmettre KVM à Proxmox) :</p>
+<h3><strong>Pour les CPU Intel</strong></h3>
+<pre><code class="language-bash"># Vérifier l'état actuel (N = désactivé, Y = activé)
+cat /sys/module/kvm_intel/parameters/nested
+</code></pre>
+<p>Si le résultat est Y alors passer à l'étape 2.</p>
+<pre><code># Activer la virtualisation imbriquée
+echo &quot;options kvm_intel nested=1&quot; | sudo tee /etc/modprobe.d/kvm-intel.conf
+sudo modprobe -r kvm_intel
+sudo modprobe kvm_intel
+
+# Vérifier que c'est activé
+cat /sys/module/kvm_intel/parameters/nested  # Doit afficher &quot;Y&quot;
+</code></pre>
+<h3><strong>Pour les CPU AMD</strong></h3>
+<pre><code class="language-bash">echo &quot;options kvm_amd nested=1&quot; | sudo tee /etc/modprobe.d/kvm-amd.conf
+sudo modprobe -r kvm_amd
+sudo modprobe kvm_amd
+cat /sys/module/kvm_amd/parameters/nested  # Doit afficher &quot;1&quot;
+</code></pre>
+<h3><strong>4. Redémarrer l'hôte (optionnel mais recommandé)</strong></h3>
+<pre><code class="language-bash">sudo reboot
+</code></pre>
+<p><em>(Cela garantit que les modules KVM sont bien rechargés avec la virtualisation imbriquée activée.)</em></p>
+<hr />
+<h3><strong>⚙️ Étape 2 : Configurer GNS3 pour transmettre KVM à Proxmox</strong></h3>
+<p>Par défaut, GNS3 utilise QEMU en <strong>mode émulation (TCG)</strong>, ce qui ne permet pas à Proxmox d'utiliser KVM.
+<strong>Il faut forcer GNS3 à activer KVM et à exposer les extensions de virtualisation (<code>vmx</code>/<code>svm</code>) à la VM Proxmox.</strong></p>
+<h3><strong>1. Modifier les paramètres QEMU de la VM Proxmox dans GNS3</strong></h3>
+<ol>
+<li><strong>Ouvrez GNS3</strong> et démarrez votre projet.</li>
+<li><strong>Faites un clic droit sur la VM Proxmox</strong> → <strong>Configure</strong>.</li>
+<li>Allez dans l'onglet <strong>Advanced</strong>.</li>
+<li>Dans le champ <strong>Options</strong>, ajoutez :
+   <code>-enable-kvm -cpu host,+vmx</code>
+   <em>(Remplacez <code>+vmx</code> par <code>+svm</code> si vous avez un CPU AMD.)</em></li>
+<li><strong>Appliquez</strong> et redémarrez la VM.</li>
+</ol>
+<hr />
+<h3><strong>🐧 Étape 3 : Vérifications et commandes dans Proxmox</strong></h3>
+<p>Une fois la VM Proxmox démarrée, connectez-vous en <strong>SSH</strong> (ou via la console GNS3) et exécutez ces commandes pour confirmer que <strong>KVM est bien détecté</strong>.</p>
+<h3><strong>1. Vérifier que KVM est disponible</strong></h3>
+<pre><code class="language-bash">kvm-ok
+</code></pre>
+<ul>
+<li><strong>Résultat attendu</strong> :
+  <code>INFO: /dev/kvm exists
+  KVM acceleration can be used</code></li>
+</ul>
+<p><em>(Si <code>kvm-ok</code> n'est pas installé, installez-le avec <code>apt install cpu-checker</code>.)</em></p>
+<pre><code class="language-bash">apt update &amp;&amp; apt install -y cpu-checker
+</code></pre>
+<h3><strong>2. Vérifier que les modules KVM sont chargés</strong></h3>
+<pre><code class="language-bash">lsmod | grep kvm
+</code></pre>
+<ul>
+<li><strong>Résultat attendu</strong> :
+  <code>kvm_intel              303104  0
+  kvm                   839680  1 kvm_intel</code>
+  <em>(Pour AMD, vous verrez <code>kvm_amd</code> à la place.)</em></li>
+</ul>
+<h3><strong>3. Vérifier les logs du noyau pour KVM</strong></h3>
+<pre><code class="language-bash">dmesg | grep -i kvm
+</code></pre>
+<ul>
+<li><strong>Résultat attendu</strong> :
+  <code>[    0.000000] kvm: already loaded the other module
+  [    1.234567] kvm: Nested Virtualization enabled
+  [    1.234568] kvm: VMX/SVM supported</code>
+  <em>(Si vous voyez <code>Nested Virtualization enabled</code>, c'est bon !)</em></li>
+</ul>
+  <a class="back" href="aide-memoire.html">← Tous les mémos</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

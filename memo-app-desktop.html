@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Créer un lanceur .desktop — Aide-mémoire</title>
+<meta name="description" content="Transformer un script en application lançable depuis le menu sous Linux.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Aide-mémoire · Linux</div>
+    <h1>Créer un lanceur .desktop</h1>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+<h3>1. Rendre ton script exécutable</h3>
+<pre><code class="language-bash">chmod +x /chemin/vers/mon_script.sh
+</code></pre>
+<hr />
+<h3>2. Créer le fichier .desktop</h3>
+<p>Créer le fichier :</p>
+<pre><code class="language-bash">nano ~/.local/share/applications/MonScript.desktop
+</code></pre>
+<p>Coller :</p>
+<pre><code class="language-ini">[Desktop Entry]
+Type=Application
+Name=Mon Script
+Exec=/chemin/vers/mon_script.sh
+Icon=network-wired
+Terminal=true
+Categories=Utility;
+</code></pre>
+<p>Sauvegarder (Ctrl+O), Quitter (Ctrl+X).</p>
+<hr />
+<h3>4. Rendre le .desktop exécutable</h3>
+<pre><code class="language-bash">chmod +x ~/.local/share/applications/MonScript.desktop
+</code></pre>
+<hr />
+<h3>5. Résultat</h3>
+<ul>
+<li>L’application apparaît dans le menu (GNOME, KDE, XFCE…)</li>
+<li>Tu peux l'épingler au dock</li>
+<li>Tu peux remplacer l’icône (ex: <code>network-wireless</code>)</li>
+<li>Tu peux renommer <code>Name=...</code></li>
+</ul>
+<hr />
+  <a class="back" href="aide-memoire.html">← Tous les mémos</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

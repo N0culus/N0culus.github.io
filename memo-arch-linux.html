@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installer Arch Linux — Aide-mémoire</title>
+<meta name="description" content="Installation d'Arch Linux pas à pas : partitionnement, système de base, GRUB, KDE Plasma.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Aide-mémoire · Linux</div>
+    <h1>Installer Arch Linux</h1>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+<h2>Préparation de la clé USB bootable</h2>
+<p class="lead">Télécharger l'ISO officielle et la flasher avec Rufus sur Windows</p>
+<div class="note"><b>Astuce</b>Utiliser Rufus avec le mode "Écrire en mode image ISO", schéma GPT, cible UEFI (non CSM). Ventoy peut poser des problèmes de compatibilité avec les dernières ISOs Arch.</div>
+<div class="note"><b>Attention</b>Si le disque interne n'apparaît pas au démarrage : entrer dans le BIOS (F2), aller dans System Configuration → SATA Operation et passer de RAID à AHCI.</div>
+<h2>Clavier &amp; Connexion Internet</h2>
+<p class="lead">Une fois sur le prompt root@archiso, configurer le clavier et le réseau</p>
+<pre># Passer le clavier en AZERTY français
+loadkeys fr
+
+# Connexion Wi-Fi via iwctl
+iwctl
+  # Dans le prompt [iwd]# :
+  station wlan0 scan
+  station wlan0 get-networks
+  station wlan0 connect NOM_DU_RESEAU
+  exit
+
+# Vérifier la connexion
+ping -c 3 archlinux.org</pre>
+<h2>Vérification du disque</h2>
+<p class="lead">Vérifier que le disque interne est bien détecté</p>
+<pre># Lister les disques disponibles
+lsblk
+
+# Résultat attendu :
+# nvme0n1   476.9G  → disque interne NVMe
+# sda         5G    → clé USB bootable</pre>
+<div class="note"><b>Danger</b>🔴 Si nvme0n1 n'apparaît pas : redémarrer, entrer dans le BIOS (F2) et passer SATA Operation de RAID à AHCI.</div>
+<h2>Partitionnement avec gdisk</h2>
+<p class="lead">Créer 3 partitions sur le disque NVMe avec le schéma GPT</p>
+<div class="wu-table"><table><tr><th>Partition</th><th>Taille</th><th>Type</th><th>Code</th><th>Usage</th></tr><tr><td>nvme0n1p1</td><td>512 MiB</td><td>EFI System</td><td>ef00</td><td>Boot UEFI</td></tr><tr><td>nvme0n1p2</td><td>8 GiB</td><td>Linux swap</td><td>8200</td><td>Mémoire virtuelle</td></tr><tr><td>nvme0n1p3</td><td>~230 GiB</td><td>Linux filesystem</td><td>8300</td><td>Système racine /</td></tr></table></div>
+<pre># Lancer gdisk sur le disque NVMe
+gdisk /dev/nvme0n1
+
+# Supprimer les partitions existantes
+d → 1    # supprimer partition 1
+d        # supprimer partition 2 (auto)
+
+# Créer partition EFI (512M)
+n → Entrée → Entrée → +512M → ef00
+
+# Créer partition swap (8G)
+n → Entrée → Entrée → +8G → 8200
+
+# Créer partition racine (reste du disque)
+n → Entrée → Entrée → Entrée → Entrée
+
+# Vérifier et écrire
+p    # afficher le tableau de partitions
+w    # écrire sur le disque
+y    # confirmer</pre>
+<h2>Formatage &amp; Montage</h2>
+<p class="lead">Formater chaque partition avec le bon système de fichiers</p>
+<pre># Formater la partition EFI en FAT32
+mkfs.fat -F32 /dev/nvme0n1p1
+
+# Initialiser le swap
+mkswap /dev/nvme0n1p2
+
+# Formater la partition racine en ext4
+mkfs.ext4 /dev/nvme0n1p3
+
+# Monter les partitions
+mount /dev/nvme0n1p3 /mnt
+mkdir -p /mnt/boot/efi
+mount /dev/nvme0n1p1 /mnt/boot/efi
+swapon /dev/nvme0n1p2</pre>
+<h2>Installation du système de base</h2>
+<p class="lead">Installer les paquets essentiels et générer le fstab</p>
+<pre># Installer le système de base + outils essentiels
+pacstrap /mnt base linux linux-firmware networkmanager grub efibootmgr sudo vim
+
+# Générer le fichier de montage automatique
+genfstab -U /mnt &gt;&gt; /mnt/etc/fstab
+
+# Entrer dans le système installé
+arch-chroot /mnt</pre>
+<h2>Configuration du système</h2>
+<p class="lead">Langue, fuseau horaire, hostname, mot de passe root</p>
+<pre># Fuseau horaire Paris
+ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
+hwclock --systohc
+
+# Langue française
+echo "fr_FR.UTF-8 UTF-8" &gt;&gt; /etc/locale.gen
+locale-gen
+echo "LANG=fr_FR.UTF-8" &gt; /etc/locale.conf
+echo "KEYMAP=fr" &gt; /etc/vconsole.conf
+
+# Nom de la machine
+echo "archleo" &gt; /etc/hostname
+
+# Mot de passe root
+passwd
+
+# Créer un utilisateur avec droits sudo
+useradd -m -G wheel -s /bin/bash leo
+passwd leo
+
+# Activer sudo pour le groupe wheel
+EDITOR=vim visudo
+# → décommenter : %wheel ALL=(ALL:ALL) ALL
+
+# Activer NetworkManager au démarrage
+systemctl enable NetworkManager</pre>
+<h2>Bootloader GRUB + Sécurisation</h2>
+<p class="lead">Installer GRUB et protéger les options avancées par mot de passe</p>
+<pre># Installer GRUB pour UEFI
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=ARCH
+grub-mkconfig -o /boot/grub/grub.cfg
+
+# Quitter le chroot et redémarrer
+exit
+reboot</pre>
+<pre># Générer un hash de mot de passe GRUB
+grub-mkpasswd-pbkdf2
+
+# Ajouter dans /etc/grub.d/40_custom :
+# set superusers="root"
+# password_pbkdf2 root grub.pbkdf2.sha512.10000.VOTRE_HASH
+# menuentry "Arch Linux" --unrestricted { ... }
+
+# Récupérer l'UUID de la partition racine
+sudo blkid /dev/nvme0n1p3
+
+# Regénérer la config GRUB
+sudo grub-mkconfig -o /boot/grub/grub.cfg</pre>
+<h2>Environnement de bureau KDE Plasma</h2>
+<p class="lead">Installer KDE Plasma avec SDDM comme gestionnaire de connexion</p>
+<pre># Installer KDE Plasma complet
+sudo pacman -S plasma kde-applications sddm
+
+# Activer le gestionnaire de connexion graphique
+sudo systemctl enable sddm
+
+# Redémarrer sur le bureau
+reboot
+
+# Configurer le clavier en français sous KDE
+localectl set-x11-keymap fr</pre>
+<h2>Post-installation &amp; Outils</h2>
+<p class="lead">Sécurité, outils sysadmin, shell amélioré, Docker, Exegol</p>
+<pre># Pare-feu UFW
+sudo pacman -S ufw
+sudo systemctl enable --now ufw
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw enable
+
+# Protection brute-force
+sudo pacman -S fail2ban
+sudo systemctl enable --now fail2ban</pre>
+<pre># Docker
+sudo pacman -S docker
+sudo systemctl enable --now docker
+sudo usermod -aG docker leo
+
+# Exegol (wrapper Python)
+sudo pacman -S python-pip git
+pip install exegol --break-system-packages
+echo 'export PATH="$HOME/.local/bin:$PATH"' &gt;&gt; ~/.bashrc
+source ~/.bashrc
+exegol install</pre>
+<pre># Installer Zsh et le définir comme shell par défaut
+sudo pacman -S zsh
+chsh -s /usr/bin/zsh
+
+# Installer Oh My Zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Plugins autocomplétion + coloration syntaxique
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+# Dans ~/.zshrc, modifier :
+# plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+
+# Thème Powerlevel10k
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
+# Dans ~/.zshrc : ZSH_THEME="powerlevel10k/powerlevel10k"
+source ~/.zshrc
+# Suivre le wizard de configuration p10k</pre>
+<pre># Réseau &amp; Scan
+sudo pacman -S nmap wireshark-qt netdiscover arp-scan
+
+# Monitoring
+sudo pacman -S htop btop nethogs iftop
+
+# Automatisation &amp; Terminal
+sudo pacman -S ansible tmux
+
+# Utilitaires réseau
+sudo pacman -S curl wget rsync traceroute whois bind
+
+# AUR helper (yay)
+sudo pacman -S --needed git base-devel
+git clone https://aur.archlinux.org/yay.git
+cd yay &amp;&amp; makepkg -si
+
+# Bureau à distance
+sudo pacman -S remmina freerdp
+
+# FortiClient VPN
+yay -S forticlient-vpn</pre>
+<div class="note"><b>Astuce</b>✅ Installation complète ! Le système est opérationnel avec KDE Plasma, Docker, Exegol, Zsh/P10k, les outils sysadmin et la sécurisation GRUB + UFW + Fail2ban.</div>
+  <a class="back" href="aide-memoire.html">← Tous les mémos</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

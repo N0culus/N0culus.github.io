@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Effacer des disques Ceph / LVM — Aide-mémoire</title>
+<meta name="description" content="Désactiver et supprimer les volumes Ceph/LVM puis nettoyer les disques.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Aide-mémoire · Linux</div>
+    <h1>Effacer des disques Ceph / LVM</h1>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+<h1>Désactiver TOUS les VG Ceph (automatique)</h1>
+<p>✅ Pas besoin de connaître les noms :</p>
+<pre><code class="language-bash">vgchange -an
+</code></pre>
+<p>👉 Ça désactive <strong>tous les volumes LVM non système</strong><br />
+(<code>pve</code> reste actif car utilisé).</p>
+<hr />
+<h1>ÉTAPE 3 — Supprimer TOUS les VG Ceph</h1>
+<p>⚠️ <strong>NE SUPPRIME PAS <code>pve</code></strong></p>
+<pre><code class="language-bash">vgremove -y $(vgs --noheadings -o vg_name | grep ceph)
+</code></pre>
+<p>✅ Ça supprime <strong>uniquement les VG Ceph</strong></p>
+<hr />
+<h1>ÉTAPE 4 — Supprimer les Physical Volumes</h1>
+<pre><code class="language-bash">pvremove -y /dev/sdb
+pvremove -y /dev/sdc
+
+pvremove -y /dev/ssd
+pvremove -y /dev/sde
+pvremove -y /dev/sdd
+</code></pre>
+<hr />
+<h1>ÉTAPE 5 — Nettoyage disque final</h1>
+<p>Maintenant <code>wipefs</code> va fonctionner ✅</p>
+<pre><code class="language-bash">wipefs -a /dev/sdb
+wipefs -a /dev/sdc
+sgdisk --zap-all /dev/sdb
+sgdisk --zap-all /dev/sdc
+dd if=/dev/zero of=/dev/sdb bs=1M count=200
+dd if=/dev/zero of=/dev/sdc bs=1M count=200
+
+wipefs -a /dev/ssd
+wipefs -a /dev/sde
+wipefs -a /dev/sdf
+sgdisk --zap-all /dev/ssd
+sgdisk --zap-all /dev/sde
+sgdisk --zap-all /dev/sdf
+dd if=/dev/zero of=/dev/ssd bs=1M count=200
+dd if=/dev/zero of=/dev/sde bs=1M count=200
+dd if=/dev/zero of=/dev/ssdf bs=1M count=200
+
+wipefs -a /dev/sdd
+sgdisk --zap-all /dev/sdd
+dd if=/dev/zero of=/dev/sdd bs=1M count=200
+
+</code></pre>
+<hr />
+<h1>ÉTAPE 6 — Recharger &amp; vérifier</h1>
+<pre><code class="language-bash">partprobe
+udevadm settle
+lsblk
+</code></pre>
+  <a class="back" href="aide-memoire.html">← Tous les mémos</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Haute disponibilité Ceph — Aide-mémoire</title>
+<meta name="description" content="Mettre en place Ceph sur un cluster Proxmox : moniteurs, managers, OSD, pool.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Aide-mémoire · Virtualisation</div>
+    <h1>Haute disponibilité Ceph</h1>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+<h3>Prérequis :</h3>
+<p>Avoir une deuxième carte réseau et la configurer en linux bridge avec une adresse par exemple :
+- proxmox : 10.0.0.1/24
+- proxmox2 : 10.0.0.2/24
+- proxmox3 : 10.0.0.3/24</p>
+<h3>Ajouts dans les hosts :</h3>
+<pre><code class="language-sh">nano /etc/hosts
+</code></pre>
+<blockquote>
+<p>[!warning]
+A faire avec d'installer CEPH -&gt; Création du cluster</p>
+</blockquote>
+<h3>Création du cluster :  !i!i!i!i! A faire avant le ceph</h3>
+<p>Création sur le noeud 1 et join informations pour joindre les autres.</p>
+<h3>Installation du service :</h3>
+<h3>Sur chaque noeuds :</h3>
+<p>Aller dans <strong>Ceph</strong> -&gt; <strong>Installer Ceph</strong> -&gt; Modifier Entreprise à <strong>No Subscription</strong> -&gt; <strong>Installer</strong> </p>
+<p>Cliquer sur <strong>Next</strong> -&gt; Sélectionner la deuxième carte réseau (linux Bridge crée précédemment).</p>
+<h3>Ajout des moniteurs :</h3>
+<p>Dans l'onglet Ceph -&gt; Monitor -&gt; Dans la fenêtre du haut "Monitor", ajouter les deux autre noeuds en cliquant du <strong>Create</strong></p>
+<p>Pareil pour l'onglet <strong>Manager</strong> -&gt; <strong>Create</strong> et ajoutez les autre noeuds.</p>
+<h3>Création d'un OSD :</h3>
+<p>On va donc aller dans OSD -&gt; Créer OSD -&gt; séléctionner le disque -&gt; Créer</p>
+<h3>Création du POOL</h3>
+  <a class="back" href="aide-memoire.html">← Tous les mémos</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

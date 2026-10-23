@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relier son PC à GNS3 — Aide-mémoire</title>
+<meta name="description" content="Créer une interface TAP et des routes pour accéder aux VLANs d&#x27;une maquette GNS3.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Aide-mémoire · Virtualisation</div>
+    <h1>Relier son PC à GNS3</h1>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+<h3>Sur ton poste physique :</h3>
+<h3>Créer une vraie interface TAP isolée</h3>
+<pre><code class="language-bash">sudo ip tuntap add tap0 mode tap
+sudo ip link set tap0 up
+</code></pre>
+<hr />
+<h3>Lui attribuer une IP dans ton LAN</h3>
+<pre><code class="language-bash">sudo ip addr add 192.168.1.50/24 dev tap0
+</code></pre>
+<p>Assure-toi que 192.168.1.50 n’est pas déjà utilisée.</p>
+<hr />
+<h3>Dans GNS3</h3>
+<h3>Attribuer la carte dans le LAN de GNS3</h3>
+<p>Créer un device cloud</p>
+<p>Clique droit &gt; Configure.
+Aller à l'onglet TAP interfaces.
+Ajouter l'interface tap0.
+Puis valider.</p>
+<hr />
+<p>Vérifier en accédant à l'interface web d'un service hébergé</p>
+<hr />
+<p>Après un redémarrage </p>
+<pre><code class="language-sh">sudo ip link set tap0 up
+sudo ip addr add 192.168.10.50/24 dev tap0
+sudo ip route add 192.168.1.0/24 via 192.168.10.254 dev tap0
+sudo ip route add 192.168.20.0/24 via 192.168.10.254 dev tap0
+sudo ip route add 192.168.30.0/24 via 192.168.10.254 dev tap0
+</code></pre>
+<p>Configurer des route pour l'accès aux autres VLANs depuis notre machine :</p>
+<pre><code class="language-bash">sudo ip route add 192.168.1.0/24 via 192.168.10.254 dev tap0
+sudo ip route add 192.168.20.0/24 via 192.168.10.254 dev tap0
+sudo ip route add 192.168.30.0/24 via 192.168.10.254 dev tap0
+</code></pre>
+<p>Mettre des routes prioritaire :</p>
+<pre><code class="language-bash">sudo ip route add default via 192.168.10.254 dev tap0 metric 200
+</code></pre>
+<pre><code># Avec la virtual IP
+sudo ip link set tap0 up
+sudo ip addr add 192.168.10.50/24 dev tap0
+sudo ip route add 192.168.1.0/24 via 192.168.10.250 dev tap0
+sudo ip route add 192.168.20.0/24 via 192.168.10.250 dev tap0
+sudo ip route add 192.168.30.0/24 via 192.168.10.250 dev tap0
+sudo ip route add 192.168.40.0/24 via 192.168.10.250 dev tap0
+</code></pre>
+  <a class="back" href="aide-memoire.html">← Tous les mémos</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

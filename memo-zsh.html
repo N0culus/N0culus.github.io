@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Configurer ZSH + Oh My Zsh — Aide-mémoire</title>
+<meta name="description" content="Installer Oh My Zsh, les plugins utiles et un .zshrc prêt à coller.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Aide-mémoire · Linux</div>
+    <h1>Configurer ZSH + Oh My Zsh</h1>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+<p>Voici un setup complet et prêt à coller. Je vais te donner les commandes d'installation <strong>puis</strong> le bloc <code>.zshrc</code> final.</p>
+<hr />
+<h3>1. Installe Oh My Zsh (si pas encore fait)</h3>
+<pre><code class="language-bash">sh -c &quot;$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;
+</code></pre>
+<hr />
+<h3>2. Installe les plugins externes</h3>
+<pre><code class="language-bash"># Autocomplétion basée sur l'historique (indispensable)
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+# Coloration syntaxique en temps réel
+git clone https://github.com/zsh-users/zsh-syntax-highlighting ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+
+# Completions supplémentaires pour des centaines de commandes
+git clone https://github.com/zsh-users/zsh-completions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-completions
+
+# Recherche floue dans l'historique + fichiers (Ctrl+R boosté)
+sudo apt install fzf -y
+
+# Navigation intelligente entre dossiers (remplace cd)
+curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
+</code></pre>
+<hr />
+<h3>3. Bloc à coller dans ton <code>~/.zshrc</code></h3>
+<p>Ouvre le fichier avec <code>nano ~/.zshrc</code>, <strong>remplace</strong> la ligne <code>plugins=(git)</code> existante et <strong>ajoute</strong> le bloc de config à la fin :</p>
+<pre><code class="language-bash"># Plugin Manager ───────────────────────────────────────────────────────────
+export ZSH=&quot;$HOME/.oh-my-zsh&quot;
+ZSH_THEME=&quot;robbyrussell&quot;  # Change ici pour un autre thème
+
+# Plugins ──────────────────────────────────────────────────────────────────
+plugins=(
+  git                        # Aliases git (gst, gco, gp…)
+  zsh-autosuggestions        # Autocomplétion depuis l'historique → touche →
+  zsh-syntax-highlighting    # Coloration des commandes en temps réel
+  zsh-completions            # Completions pour curl, docker, npm, pip…
+  sudo                       # Double Echap pour ajouter sudo devant la commande
+  z                          # Saut rapide vers dossiers fréquents (z monprojet)
+  fzf                        # Ctrl+R = recherche floue dans l'historique
+  docker                     # Autocomplétion Docker
+  docker-compose             # Autocomplétion Docker Compose
+  npm                        # Autocomplétion npm
+  pip                        # Autocomplétion pip
+  python                     # Aliases python utiles
+  command-not-found          # Suggère le paquet apt à installer si commande inconnue
+  history                    # Aliases : h (history), hsi (grep dans history)
+  colored-man-pages          # Pages man colorées
+  extract                    # Commande universelle : extract fichier.tar.gz/zip/rar…
+)
+
+source $ZSH/oh-my-zsh.sh
+
+# Zsh-autosuggestions config ───────────────────────────────────────────────
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=&quot;fg=#888888&quot;   # Couleur de la suggestion
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)   # Historique d'abord, puis completions système
+bindkey '→' autosuggest-accept                  # Flèche droite pour accepter
+bindkey '^ ' autosuggest-accept                 # Ctrl+Espace aussi
+
+# Completions ──────────────────────────────────────────────────────────────
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
+autoload -Uz compinit &amp;&amp; compinit
+
+# Zoxide (remplace cd intelligemment) ──────────────────────────────────────
+eval &quot;$(zoxide init zsh)&quot;
+alias cd=&quot;z&quot;   # cd pointe maintenant sur zoxide
+
+# Historique boosté ────────────────────────────────────────────────────────
+HISTSIZE=50000
+SAVEHIST=50000
+HISTFILE=~/.zsh_history
+setopt HIST_IGNORE_DUPS       # Pas de doublons
+setopt HIST_IGNORE_SPACE      # Commandes précédées d'un espace non sauvegardées
+setopt SHARE_HISTORY          # Partage l'historique entre les terminaux ouverts
+</code></pre>
+<p>Ensuite applique les changements :</p>
+<pre><code class="language-bash">source ~/.zshrc
+</code></pre>
+<hr />
+<h3>Résumé des raccourcis clés après installation</h3>
+<table>
+<thead>
+<tr>
+<th>Raccourci</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>→</code> ou <code>Ctrl+Espace</code></td>
+<td>Accepte la suggestion de l'historique</td>
+</tr>
+<tr>
+<td><code>Ctrl+R</code></td>
+<td>Recherche floue dans tout l'historique (via fzf)</td>
+</tr>
+<tr>
+<td><code>z monprojet</code></td>
+<td>Saute dans le dossier <code>monprojet</code> peu importe où tu es</td>
+</tr>
+<tr>
+<td>Double <code>Echap</code></td>
+<td>Ajoute <code>sudo</code> devant la commande en cours</td>
+</tr>
+<tr>
+<td><code>extract fichier.zip</code></td>
+<td>Décompresse n'importe quel format automatiquement</td>
+</tr>
+<tr>
+<td><code>hsi motclé</code></td>
+<td>Grep dans l'historique</td>
+</tr>
+</tbody>
+</table>
+  <a class="back" href="aide-memoire.html">← Tous les mémos</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

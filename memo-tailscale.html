@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tailscale (subnet router) — Aide-mémoire</title>
+<meta name="description" content="Installer Tailscale et exposer un LAN complet via un subnet router.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Aide-mémoire · Réseau</div>
+    <h1>Tailscale (subnet router)</h1>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+<h1>Installation et configuration de Tailscale</h1>
+<ol>
+<li>
+<p><strong>Créez un compte</strong>
+Rendez-vous sur <a href="https://tailscale.com">tailscale.com</a> et créez un compte gratuit (Google, Microsoft ou email).</p>
+</li>
+<li>
+<p><strong>Installez l’application</strong></p>
+</li>
+</ol>
+<pre><code class="language-sh">curl -fsSL https://tailscale.com/install.sh | sh
+</code></pre>
+<ol start="3">
+<li><strong>Connectez-vous</strong></li>
+</ol>
+<pre><code class="language-sh">sudo tailscale up
+</code></pre>
+<p>Un lien s’affiche pour autoriser l’appareil dans votre navigateur.</p>
+<ol start="4">
+<li><strong>Vérifiez la connexion</strong></li>
+</ol>
+<pre><code class="language-sh">tailscale status
+</code></pre>
+<p>Vous devriez voir votre machine avec son <strong>IP Tailscale</strong> (100.x.x.x).</p>
+<ol start="5">
+<li><strong>Répétez sur vos autres appareils</strong></li>
+</ol>
+<h1>Subnet router - accéder au LAN complet</h1>
+<ol>
+<li><strong>Activez le routage IP</strong> sur la machine qui servira de passerelle (serveur tailscale)</li>
+</ol>
+<pre><code class="language-sh">echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.confecho 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.confsudo sysctl -p /etc/sysctl.d/99-tailscale.conf
+</code></pre>
+<ol start="2">
+<li><strong>Annoncez le sous-réseau</strong></li>
+</ol>
+<pre><code class="language-sh">sudo tailscale set --advertise-routes=192.168.212.0/24,192.168.213.0/24
+</code></pre>
+<ol start="3">
+<li><strong>Approuvez la route</strong> dans la console Tailscale</li>
+</ol>
+<ul>
+<li>Allez dans <strong>Machines</strong> → cliquez sur la machine → <strong>Edit route settings</strong></li>
+<li>Cochez la route annoncée</li>
+</ul>
+<ol start="4">
+<li>Sur votre pc pour accéder au route distante</li>
+</ol>
+<pre><code class="language-sh">sudo tailscale set --accept-routes
+</code></pre>
+<ol start="5">
+<li>Si vous voulez bloquer l'accès à votre pc </li>
+</ol>
+<pre><code class="language-sh">sudo tailscale set --shields-up
+</code></pre>
+<ol start="6">
+<li><strong>Vérifiez l’accès</strong>
+Depuis un autre appareil Tailscale, pingez une IP du LAN :</li>
+</ol>
+<pre><code class="language-sh">ping 192.168.212.254
+</code></pre>
+  <a class="back" href="aide-memoire.html">← Tous les mémos</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

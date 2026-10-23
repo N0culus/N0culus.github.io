@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VLANs sur OPNsense — Aide-mémoire</title>
+<meta name="description" content="Créer et router des VLANs sur OPNsense : interfaces, DHCP, règles de pare-feu.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Aide-mémoire · Réseau</div>
+    <h1>VLANs sur OPNsense</h1>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+<h3>1. Aller dans :</h3>
+<p><strong>Interfaces → Other Types → VLAN</strong></p>
+<p>Cliquer <strong>Add (+)</strong> :
+- Parent interface : <em>ton interface physique</em> (ex : igb0)
+- VLAN tag : ex <strong>10</strong>
+- Description : ex <strong>VLAN10-LAN</strong></p>
+<p>Répète pour chaque VLAN.</p>
+<hr />
+<h3><strong>C. Assignation des interfaces</strong></h3>
+<h3>Aller dans :</h3>
+<p><strong>Interfaces → Assignments</strong></p>
+<p>Tu vas voir tes VLANs apparaître sous forme de <em>ports disponibles</em>.<br />
+Pour chaque VLAN, clique sur <strong>+</strong> pour créer une vraie interface.</p>
+<p>→ Exemple :
+- VLAN10 apparaît comme <code>vlan0</code>
+- Tu cliques <strong>+</strong>, et tu obtiens une interface <code>OPT1</code></p>
+<p>Renomme-la en <strong>LAN_V10</strong> par exemple.</p>
+<hr />
+<h3><strong>D. Activer et configurer l’interface</strong></h3>
+<p>Ouvre l’interface nouvellement créée :</p>
+<ul>
+<li><strong>Enable interface</strong></li>
+<li>IPv4 configuration : <strong>Static IP</strong></li>
+<li>Exemple IP : <code>192.168.10.1/24</code></li>
+</ul>
+<p>Enregistre.</p>
+<hr />
+<h3><strong>E. Ajouter un serveur DHCP (optionnel mais courant)</strong></h3>
+<p><strong>Services → ISC DHCPv4 → VLAN10</strong><br />
+Active, puis configure :</p>
+<ul>
+<li>Range : <code>192.168.10.10 – 192.168.10.150</code></li>
+</ul>
+<hr />
+<h3><strong>F. Règles Firewall (là où beaucoup bloquent)</strong></h3>
+<h3>Aller dans :</h3>
+<p><strong>Firewall → Rules → VLAN10</strong>
+Par défaut : <em>aucune règle = tout est bloqué.</em>
+→ Ajouter une règle <em>autoriser tout</em> au début pour tester :</p>
+<pre><code>Action : Pass   
+Interface : VLAN10   
+Source : VLAN10 net   
+Destination : any
+</code></pre>
+<p>Ensuite, tu raffineras (VLAN vers internet seulement, accès à un serveur, etc.).</p>
+<hr />
+<h1><strong>5. Perspectives alternatives / erreurs classiques</strong></h1>
+<h3>Alternative : utiliser un VLAN parent LAN + VLANs enfants</h3>
+<p>→ LAN = VLAN 1 untagged<br />
+→ VLAN 10, 20, 30 taggés<br />
+→ Switch en trunk vers OPNSense</p>
+<h3>Dans un environnement virtuel (Proxmox, ESXi, GNS3)</h3>
+<p>→ Le vSwitch / bridge DOIT être VLAN-aware<br />
+Sinon rien ne passe.</p>
+<h3>Si tu veux isoler des VLANs IoT</h3>
+<p>→ Bloquer tout sauf Internet<br />
+→ Autoriser DNS/DHCP vers OPNsense seulement.</p>
+<div class="note"><b>Important</b>Mettre le port entre le switch et le routeur en dot1q (trunk, tagué) Et le port vers l&#x27;équipement en access avec le numéro du vlan</div>
+  <a class="back" href="aide-memoire.html">← Tous les mémos</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>
