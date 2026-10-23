@@ -119,7 +119,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .group{display:grid;grid-template-columns:11rem 1fr;gap:1rem;padding:1.1rem 0;border-bottom:1px solid var(--line)}
 .group h3{font-family:var(--mono);font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;font-stretch:100%;padding-top:.25rem}
 .group h3 i{display:none}
-.chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.chips{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;gap:.35rem}
 .chips span{font-size:.85rem;font-weight:500;padding:.18rem .55rem;background:var(--bg2);border:1px solid var(--line);transition:border-color .15s}
 .chips span:hover{border-color:var(--ink)}
 .chips span.wip{border:1px dashed var(--accent);color:var(--accent)}
@@ -284,3 +284,15 @@ code{font-family:var(--mono);font-size:.88em;background:var(--bg);padding:.05rem
 .ondemand a{color:var(--ink);border-bottom:1.5px solid var(--accent)}
 .sub .side + .back{margin-top:1.2rem}
 @media(max-width:900px){.case{grid-template-columns:1fr}}
+
+/* Page alternance : projets marquants */
+.missions{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem}
+.missions .panel{display:flex;flex-direction:column}
+.missions .label{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);margin-bottom:.4rem}
+.missions h3{font-size:1.2rem;line-height:1.25;margin-bottom:.6rem}
+.missions p{margin-bottom:.8rem}
+.hurdle{margin-top:auto;padding-top:.8rem;border-top:1px solid var(--line);font-size:.92rem}
+.hurdle b{display:block;font-family:var(--mono);font-size:.7rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.2rem}
+.sub-title{font-family:var(--mono);font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;font-stretch:100%;margin:3rem 0 .8rem}
+.certs .row b{font-size:.95rem}
+@media(max-width:860px){.missions{grid-template-columns:1fr}}

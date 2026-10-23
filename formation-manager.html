@@ -43,7 +43,12 @@
       <li>Conception de challenges : Active Directory, WiFi, Web, SQLi, Reverse, OSINT</li>
       <li>Infrastructure d'hébergement sous Proxmox, derrière un Fortigate</li>
     </ul>
-    <!-- À compléter : combien de VM, comment les participants étaient isolés, un challenge que tu as conçu expliqué de bout en bout -->
+    <h3>Difficultés et retour d'expérience</h3>
+    <ul>
+      <li>J'ai déployé le stockage distribué Ceph avant de constituer le cluster Proxmox. Il aurait fallu faire l'inverse : monter le cluster d'abord, puis Ceph par-dessus.</li>
+      <li>Le second switch fourni ne faisait pas de routage. J'ai apporté un pare-feu Fortigate, placé devant ce switch, pour assurer la solution de secours.</li>
+    </ul>
+    <!-- À compléter si possible : nombre de VM, isolation des participants, un challenge que tu as conçu expliqué de bout en bout -->
     <div class="chips"><span>Proxmox</span><span>Fortigate</span><span>Active Directory</span><span>WiFi</span><span>Web</span><span>SQLi</span><span>Reverse</span><span>OSINT</span></div>
     <a class="back" href="ctf.html">Voir la page CTF →</a>
   </div>

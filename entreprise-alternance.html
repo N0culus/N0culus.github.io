@@ -26,7 +26,7 @@
   <div class="wrap">
     <div class="meta">2022 – présent · Absys Informatique, Cavaillon</div>
     <h1>Alternance : Administrateur Systèmes / Réseaux &amp; Cybersécurité</h1>
-    <p>Depuis 2022 en entreprise, en parallèle des études, chez un prestataire IT qui gère l'infrastructure d'une clientèle de PME. C'est là que la théorie des cours devient la pratique de tous les jours : un ticket à résoudre, une sauvegarde à vérifier, un accès à sécuriser.</p>
+    <p>Depuis 2022, en parallèle de mes études, chez un prestataire informatique qui gère l'infrastructure de plus de 600 entreprises : PME, collectivités, santé, professions juridiques.</p>
   </div>
 </header>
 
@@ -36,8 +36,9 @@
     <div class="panel">
       <div class="facts">
         <div><b>4</b><span>ans d'alternance</span></div>
-        <div><b>400+</b><span>clients accompagnés en hotline</span></div>
-        <div><b>[N]</b><span>[à préciser : ex. nombre d'interventions, de tickets/mois…]</span></div>
+        <div><b>600+</b><span>entreprises clientes</span></div>
+        <div><b>~80</b><span>tickets par jour pour l'équipe hotline</span></div>
+        <div><b>90 %</b><span>des délais d'engagement (SLA) respectés</span></div>
       </div>
     </div>
   </div>
@@ -46,30 +47,74 @@
 <section class="sub">
   <div class="wrap">
     <h2>Missions au quotidien</h2>
-    <div class="panel project">
-      <h3>Support &amp; exploitation</h3>
-      <p>[Décris ici concrètement ce que tu fais chaque semaine — remplace ces exemples par tes vraies missions.]</p>
-      <ul>
-        <li>Hotline et support niveau 1/2 pour les clients de l'entreprise : diagnostic, résolution, escalade</li>
-        <li>Suivi des sauvegardes Veeam et vérification de leur bon déroulement</li>
-        <li>Gestion des accès distants et des comptes dans l'annuaire Active Directory</li>
-        <li>Administration d'environnements Microsoft 365 : licences, boîtes mail, Teams, OneDrive</li>
-        <li>Supervision de l'infrastructure et traitement des alertes</li>
-        <li>[Ajoute ici toute mission propre à ton poste : déploiements, câblage, astreintes, projets clients…]</li>
-      </ul>
+    <div class="case">
+      <div class="panel">
+        <h3>Hotline et téléassistance</h3>
+        <p>Je prends en charge des tickets en autonomie, avec un engagement de réponse sous 4 heures pour les clients sous contrat. Quand la panne ne se diagnostique pas à distance, j'interviens sur site.</p>
+        <p>Exemple : une panne réseau générale chez un client. En débranchant les équipements un à un, baie après baie, j'ai isolé une boucle créée par deux câbles reliés entre eux. Réseau rétabli dans le délai de 4 heures.</p>
+      </div>
+      <div class="panel">
+        <h3>Postes, serveurs et terrain</h3>
+        <ul>
+          <li>Préparation standardisée d'environ 6 postes par semaine : logiciels métiers, mises à jour, agent de supervision, installation sur site</li>
+          <li>Administration Active Directory, Microsoft 365 et Exchange</li>
+          <li>Câblage : passage de câbles, sertissage RJ45 en T568B, repérage des prises à la sonde</li>
+          <li>Déploiement et gestion centralisée de bornes Wi-Fi UniFi</li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="sub">
   <div class="wrap">
-    <h2>Environnement technique</h2>
-    <div class="panel">
-      <p>Les outils et technologies utilisés au quotidien sur le terrain, à ajuster selon ton poste actuel.</p>
-      <div class="chips">
-        <span>Windows Server</span><span>Active Directory</span><span>Microsoft 365</span><span>Exchange</span>
-        <span>Veeam B&amp;R</span><span>Fortinet</span><span>VPN</span>
+    <h2>Projets marquants</h2>
+    <div class="missions">
+      <div class="panel">
+        <span class="label">Sécurité réseau</span>
+        <h3>Politique de filtrage sur un parc de Fortigate multi-sites</h3>
+        <p>Cartographie des flux nécessaires par serveur (annuaire, fichiers, ERP, impression), puis règles réduites au strict nécessaire : LAN vers Internet, VPN SSL et VPN IPsec vers le LAN. Activation au siège, puis réplication sur tous les sites à mon initiative.</p>
+        <p class="hurdle"><b>Difficulté</b> Dès l'activation, la téléphonie IP est devenue muette et le système d'alarme injoignable. J'ai ajouté les règles manquantes pour ces deux services.</p>
       </div>
+      <div class="panel">
+        <span class="label">Détection</span>
+        <h3>Alertes sur les connexions RDP hors horaires</h3>
+        <p>Déploiement de l'agent Grafana Alloy sur les serveurs clients pour collecter les ouvertures de session RDP (journaux TerminalServices), puis tableaux de bord et alertes mail sur les connexions la nuit et le week-end.</p>
+        <p class="hurdle"><b>Difficulté</b> Extraire le nom du compte des journaux bruts : j'ai appris les expressions régulières pour y arriver.</p>
+      </div>
+      <div class="panel">
+        <span class="label">Réseau</span>
+        <h3>Reprise de l'infrastructure d'un client issu d'une fusion</h3>
+        <p>VLANs pour séparer les réseaux des deux anciennes entités, serveur Hyper-V avec Active Directory (installé en autonomie) et RDS, partages mappés par script. Pont hertzien entre deux bâtiments, puis lien de secours Starlink transporté dans un VLAN dédié, avec bascule automatique sur le Fortigate (ping monitor).</p>
+        <p class="hurdle"><b>Difficulté</b> Les antennes refusaient de s'associer. Après un test concluant au bureau, le coupable s'est révélé être un câble défectueux.</p>
+      </div>
+      <div class="panel">
+        <span class="label">Sauvegarde</span>
+        <h3>Sauvegardes Veeam externalisées sur disques en rotation</h3>
+        <p>4 VM et 2,5 To sauvegardés chaque soir sur l'un des 5 disques externes. Un script PowerShell détecte le disque branché, lance le job correspondant et relance jusqu'à 3 fois en cas d'échec.</p>
+        <p class="hurdle"><b>Difficulté</b> Les ports USB 2.0 du serveur ne reconnaissaient pas les disques, même après mise à jour de l'iDRAC avec le support Dell. Solution : passer par l'unique port USB 3.0, avec une rallonge pour le client.</p>
+      </div>
+      <div class="panel">
+        <span class="label">Réseau</span>
+        <h3>VPN IPsec inter-sites Fortinet</h3>
+        <p>Raccordement du nouveau site d'un client à l'étranger : configuration en deux semaines avec un collègue, routeur préconfiguré puis expédié, tests d'accès aux serveurs du site principal.</p>
+      </div>
+      <div class="panel">
+        <span class="label">Systèmes</span>
+        <h3>Remplacement d'un serveur et migration Microsoft 365</h3>
+        <p>Nouveau serveur Hyper-V avec 4 VM (annuaire, SQL, RDS, Veeam) et bascule en une semaine. Migration de 11 boîtes OVH vers Microsoft 365, dont la résolution d'un enrôlement MFA bloqué.</p>
+      </div>
+    </div>
+    <p class="ondemand">Projets issus de mon mémoire d'entreprise 2024 – 2025. Clients volontairement anonymisés.</p>
+  </div>
+</section>
+
+<section class="sub">
+  <div class="wrap">
+    <h2>Environnement technique</h2>
+    <div class="chips">
+      <span>Fortinet / Fortigate</span><span>VPN IPsec &amp; SSL</span><span>UniFi</span><span>Windows Server</span><span>Hyper-V</span><span>Active Directory</span><span>RDS</span>
+      <span>Microsoft 365</span><span>Exchange</span><span>Veeam B&amp;R</span><span>PowerShell</span><span>Grafana / Alloy</span><span>Starlink</span>
     </div>
   </div>
 </section>
@@ -78,7 +123,8 @@
   <div class="wrap">
     <h2>Ce que ça m'apporte</h2>
     <div class="panel">
-      <p>[Un ou deux paragraphes personnels : en quoi cette expérience de terrain nourrit ton orientation vers la cybersécurité, ce que le contact quotidien avec les utilisateurs et les pannes réelles t'a appris que les cours ne donnent pas.]</p>
+      <!-- Brouillon tiré de ton mémoire : à reformuler avec tes mots -->
+      <p>La politique de filtrage Fortigate a été ma première mission directement liée à la cybersécurité. Elle m'a appris qu'une règle se juge aussi en production : le jour de l'activation, le client n'entendait plus rien au téléphone. Si c'était à refaire, j'impliquerais davantage les utilisateurs dans les tests avant de généraliser.</p>
     </div>
     <a class="back" href="index.html#parcours" style="margin-top:2rem">← Retour au parcours</a>
   </div>
