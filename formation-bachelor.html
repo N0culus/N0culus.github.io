@@ -17,7 +17,7 @@
   <div class="wrap">
     <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
     <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
-    <ul class="links"><li><a href="index.html">Accueil</a></li><li><a href="index.html#about">À propos</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#skills">Compétences</a></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="veille.html">Veille</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="index.html#contact">Contact</a></li></ul>
 </div>
 </nav>
 <main>
@@ -28,98 +28,31 @@
     <p>Une année pour associer développement applicatif et sécurité dès la conception, avec un projet mené en équipe selon la méthode SCRUM.</p>
   </div>
 </header>
-<section class="sub"><div class="wrap"><h2>Projet principal</h2>
-<div class="panel project"><h3>Projet ITWay</h3><p>Mise en place d'une infrastructure complète dockerisée, conduite en SCRUM. <ul></ul>Mise en place d’un serveur de messagerie sous Ubuntu Server avec Postfix, Dovecot et MariaDB, permettant l’envoi, la réception et le stockage sécurisé des e-mails. Mon rôle a été de configurer l’ensemble des services, le TLS, DNS et l’authentification, puis de résoudre les différents problèmes de configuration et de communication entre les services.</p><ul><li>Filtrage Stormshield et segmentation en VLANs</li><li>DNS Bind9</li><li>Messagerie Postfix/Dovecot</li><li>Déploiement automatisé avec Ansible</li><li>Maquettage réseau sous GNS3</li></ul><div class="chips"><span>Docker</span><span>Stormshield</span><span>VLAN</span><span>Bind9</span><span>Postfix</span><span>Dovecot</span><span>Ansible</span><span>GNS3</span><span>SCRUM</span></div>
-<div class="shot"><img src="img/itway-schema.jpg" alt="Projet ITWay" loading="lazy" onerror="this.remove()"></div></div>
+
+<section class="sub"><div class="wrap">
+<h2>Projet : ITWay</h2>
+<div class="case">
+  <div class="panel">
+    <h3>Contexte</h3>
+    <p>En équipe de trois, conduite en SCRUM : bâtir l'infrastructure complète de l'entreprise fictive ITWay, avec des services dockerisés, une maquette réseau sous GNS3 et un déploiement automatisé avec Ansible.</p>
+    <h3>Mon rôle</h3>
+    <ul>
+      <li><strong>Messagerie</strong> : Postfix, Dovecot et MariaDB, webmail Roundcube, boîtes gérées avec PostfixAdmin, relais en DMZ et TLS</li>
+      <li><strong>Authentification</strong> : connexion à la messagerie avec les identifiants Windows, via LDAP sur l'Active Directory</li>
+      <li><strong>Active Directory</strong> : OU et groupes créés par scripts PowerShell, profils itinérants, GPO de sécurité, RDP et audit, partages réseau</li>
+      <li><strong>Pare-feu Stormshield</strong> : mise en service, VLANs et DHCP, routage</li>
+    </ul>
+    <h3>Difficultés résolues</h3>
+    <p>J'ai tenu un journal des incidents (symptôme, cause, correctif) : droits sur les certificats, flux bloqués entre la DMZ et le LAN, Postfix qui refusait de démarrer à cause d'un bloc <code>submission</code> placé dans le mauvais fichier, envois impossibles depuis Roundcube…</p>
+    <div class="chips"><span>Docker</span><span>Postfix</span><span>Dovecot</span><span>Roundcube</span><span>LDAP</span><span>Active Directory</span><span>PowerShell</span><span>Stormshield</span><span>GNS3</span><span>Ansible</span><span>SCRUM</span></div>
+  </div>
+  <div class="shot"><img src="img/itway-schema.jpg" alt="Schéma de l'infrastructure ITWay" loading="lazy" onerror="this.remove()"></div>
+</div>
+<p class="ondemand">Le dossier technique complet est disponible sur demande : <a href="index.html#contact">contactez-moi</a>.</p>
 </div></section>
-<section class="sub"><div class="wrap"><h2>Documentation</h2>
-   <div class="docs">
-    <a class="doc" href="docs/bachelor/AD - Création du domaine.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/AD - Création du domaine.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
 
-    <a class="doc" href="docs/bachelor/AD - Documentation Complète.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/AD - Documentation Complète.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-
-    <a class="doc" href="docs/bachelor/AD - Mise en place des profils itinérants.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/AD - Mise en place des profils itinérants.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-
-    <a class="doc" href="docs/bachelor/ANSIBLE - Configuration de WinRM WS2022.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/ANSIBLE - Configuration de WinRM WS2022.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-
-    <a class="doc" href="docs/bachelor/ANSIBLE - Configuration du conteneur.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/ANSIBLE - Configuration du conteneur.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-
-    <a class="doc" href="docs/bachelor/DNS - Déployer Bind9 avec Ansible.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/DNS - Déployer Bind9 avec Ansible.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-
-    <a class="doc" href="docs/bachelor/INTRANET - LDAPS.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/INTRANET - LDAPS.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-
-    <a class="doc" href="docs/bachelor/INTRANET - Actualites et BDD.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/INTRANET - Actualites et BDD.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-
-    <a class="doc" href="docs/bachelor/INTRANET - HTTPS via NGINX et log.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/INTRANET - HTTPS via NGINX et log.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-
-    <a class="doc" href="docs/bachelor/Messagerie - Documentation Technique.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/Messagerie - Documentation Technique.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-
-    <a class="doc" href="docs/bachelor/Messagerie - Fichiers de configuration et Playbook.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/Messagerie - Fichiers de configuration et Playbook.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-
-    <a class="doc" href="docs/bachelor/Messagerie - Procédure pour la création d'un utilisateur mail depuis l'Active Directory.pdf" target="_blank" rel="noopener">
-        <div class="thumb">
-            aperçu
-            <img src="img/bachelor/Messagerie - Procédure pour la création d'un utilisateur mail depuis l'Active Directory.jpg" alt="" loading="lazy" onerror="this.remove()">
-        </div>
-    </a>
-</div></div>
 <section class="sub"><div class="wrap"><h2>Compétences mobilisées</h2>
-<div class="chips"><span>Docker</span><span>Ansible</span><span>Stormshield</span><span>Bind9</span><span>GNS3</span><span>Git/GitHub</span><span>Python</span><span>SCRUM</span></div>
+<div class="chips"><span>Docker</span><span>Ansible</span><span>Stormshield</span><span>Postfix/Dovecot</span><span>Active Directory</span><span>GNS3</span><span>Git/GitHub</span><span>SCRUM</span></div>
 <a class="back" href="index.html#parcours" style="margin-top:2rem">← Retour au parcours</a>
 </div></section>
 </main>

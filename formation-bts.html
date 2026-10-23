@@ -17,7 +17,7 @@
   <div class="wrap">
     <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
     <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
-    <ul class="links"><li><a href="index.html">Accueil</a></li><li><a href="index.html#about">À propos</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#skills">Compétences</a></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="veille.html">Veille</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="index.html#contact">Contact</a></li></ul>
   </div>
 </nav>
 <main>
@@ -28,16 +28,36 @@
     <p>Deux ans consacrés à l'administration des systèmes et réseaux, en alternance : les cours à Nextech, la pratique en entreprise chez Absys Informatique.</p>
   </div>
 </header>
-<section class="sub"><div class="wrap"><h2>Projet principal</h2>
-<div class="panel project"><h3>Infrastructure multi-sites</h3><p>Conception d'une infrastructure multi-sites pensée pour la haute disponibilité.</p><ul><li>Virtualisation avec Proxmox</li><li>pfSense avec VPN IPsec et CARP</li><li>Active Directory redondant</li><li>GLPI et Zabbix pour le parc et la supervision</li><li>HAProxy et DMZ IIS</li><li>Sauvegardes Veeam et déploiement de postes avec FOG</li></ul><div class="chips"><span>Proxmox</span><span>pfSense</span><span>IPsec</span><span>CARP</span><span>Active Directory</span><span>GLPI</span><span>Zabbix</span><span>HAProxy</span><span>Veeam</span><span>FOG</span></div>
-<div class="shot"><img src="img/bts-schema.png" alt="Infrastructure multi-sites" loading="lazy" onerror="this.remove()"></div>
-<ul></ul><a class="btn primary" href="docs/bts-dossier.pdf" download><b>Télécharger la documentation</b></a></div>
+
+<section class="sub"><div class="wrap">
+<h2>Projet : infrastructure multi-sites</h2>
+<div class="case">
+  <div class="panel">
+    <h3>Contexte</h3>
+    <p>Concevoir l'infrastructure d'une entreprise répartie sur plusieurs sites, pensée pour la haute disponibilité : aucun service critique ne doit dépendre d'une seule machine.</p>
+    <h3>Ce que j'ai mis en place</h3>
+    <ul>
+      <li>Virtualisation de l'ensemble des serveurs sous Proxmox</li>
+      <li>Pare-feux pfSense en haute disponibilité (CARP), sites reliés par VPN IPsec</li>
+      <li>Active Directory redondant</li>
+      <li>GLPI pour le parc, Zabbix pour la supervision</li>
+      <li>Serveur web IIS en DMZ derrière HAProxy</li>
+      <li>Sauvegardes Veeam et déploiement des postes avec FOG</li>
+    </ul>
+    <!-- À compléter : une ou deux difficultés rencontrées et comment tu les as résolues, puis le résultat (ex. bascule CARP testée, note obtenue…) -->
+    <div class="chips"><span>Proxmox</span><span>pfSense</span><span>IPsec</span><span>CARP</span><span>Active Directory</span><span>GLPI</span><span>Zabbix</span><span>HAProxy</span><span>Veeam</span><span>FOG</span></div>
+  </div>
+  <div class="shot"><img src="img/bts-schema.png" alt="Schéma de l'infrastructure multi-sites" loading="lazy" onerror="this.remove()"></div>
+</div>
+<p class="ondemand">Le dossier technique complet est disponible sur demande : <a href="index.html#contact">contactez-moi</a>.</p>
 </div></section>
-<section class="sub">
-  <div class="wrap">
-    <h2>Documentation</h2>
-    <a class="btn ghost" href="documentation.html#tous">Voir la documentation liée</a></section>
+
+<section class="sub"><div class="wrap">
+<h2>Tutoriels liés</h2>
+<div class="side"><a class="row" href="docs/Comment-installer-Proxmox-VE-7.0-et-creer-sa-premiere-VM-.pdf" target="_blank" rel="noopener"><b>Installer Proxmox VE et créer sa première VM</b><span>PDF</span></a><a class="row" href="docs/Comment-creer-des-VLANs-avec-Proxmox-et-PfSense.pdf" target="_blank" rel="noopener"><b>Créer des VLANs avec Proxmox et pfSense</b><span>PDF</span></a><a class="row" href="docs/Mise-en-place-dun-VPN-client-to-Site-avec-PfSense.pdf" target="_blank" rel="noopener"><b>VPN client-to-site avec pfSense</b><span>PDF</span></a><a class="row" href="docs/Comment-creer-un-domaine-ad.pdf" target="_blank" rel="noopener"><b>Créer un domaine Active Directory</b><span>PDF</span></a><a class="row" href="docs/RDSxGPOxRedondance.pdf" target="_blank" rel="noopener"><b>RDS, GPO et redondance</b><span>PDF</span></a><a class="row" href="docs/Installation-pas-a-pas-de-GLPI-10-sur-Debian-11.pdf" target="_blank" rel="noopener"><b>Installer GLPI 10 sur Debian 11</b><span>PDF</span></a><a class="row" href="docs/Gestion-de-sauvegarde-avec-Proxmox-Backup.pdf" target="_blank" rel="noopener"><b>Sauvegardes avec Proxmox Backup</b><span>PDF</span></a></div>
+<a class="back" href="documentation.html">Toute la documentation →</a>
 </div></section>
+
 <section class="sub"><div class="wrap"><h2>Compétences mobilisées</h2>
 <div class="chips"><span>Windows Server</span><span>Linux Debian</span><span>Proxmox</span><span>pfSense</span><span>Active Directory</span><span>GLPI</span><span>Zabbix</span><span>Veeam</span></div>
 <a class="back" href="index.html#parcours" style="margin-top:2rem">← Retour au parcours</a>
