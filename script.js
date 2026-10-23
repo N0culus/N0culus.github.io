@@ -6,52 +6,6 @@ document.getElementById('y').textContent=new Date().getFullYear();
 
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-/* Typewriter */
-const roles=["Étudiant Manager en Ingénierie Informatique","Futur Expert Cybersécurité","Alternant Systèmes & Réseaux"];
-const el=document.getElementById('role');
-if(!el){}else if(reduce){el.textContent=roles[0]}else{
-  let r=0,c=0,del=false;
-  (function tick(){
-    const w=roles[r];
-    el.textContent=w.slice(0,c);
-    if(!del&&c===w.length){del=true;return setTimeout(tick,1600)}
-    if(del&&c===0){del=false;r=(r+1)%roles.length}
-    c+=del?-1:1;
-    setTimeout(tick,del?28:60);
-  })();
-}
-
-/* Réseau de nœuds */
-(function(){
-  const cv=document.getElementById('net');if(!cv)return;const ctx=cv.getContext('2d');
-  let W,H,pts=[],mouse={x:-999,y:-999};
-  function size(){
-    const d=devicePixelRatio||1;W=cv.clientWidth;H=cv.clientHeight;
-    cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);
-    const n=Math.min(90,Math.floor(W*H/14000));
-    pts=Array.from({length:n},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35}));
-  }
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    for(const p of pts){
-      if(!reduce){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1}
-      ctx.fillStyle='rgba(14,165,233,.7)';ctx.beginPath();ctx.arc(p.x,p.y,1.6,0,6.283);ctx.fill();
-    }
-    for(let i=0;i<pts.length;i++){
-      for(let j=i+1;j<pts.length;j++){
-        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.hypot(dx,dy);
-        if(d<130){ctx.strokeStyle=`rgba(14,165,233,${.28*(1-d/130)})`;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke()}
-      }
-      const m=Math.hypot(pts[i].x-mouse.x,pts[i].y-mouse.y);
-      if(m<160){ctx.strokeStyle=`rgba(241,245,249,${.35*(1-m/160)})`;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(mouse.x,mouse.y);ctx.stroke()}
-    }
-    if(!reduce)requestAnimationFrame(draw);
-  }
-  addEventListener('resize',()=>{size();if(reduce)draw()});
-  document.getElementById('hero').addEventListener('mousemove',e=>{const b=cv.getBoundingClientRect();mouse.x=e.clientX-b.left;mouse.y=e.clientY-b.top});
-  size();draw();
-})();
-
 /* Projets : chaque card renvoie vers la page de formation concernée */
 const projects=[
  {t:"CTF « Une nuit pour hacker »",d:"2026",s:"Co-organisation d'un CTF de plus de 150 participants et 130+ challenges : Active Directory, WiFi et Web.",

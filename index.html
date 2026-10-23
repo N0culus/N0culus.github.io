@@ -8,7 +8,7 @@
 <meta name="description" content="Portfolio de Léo Gauthier, étudiant Manager en Ingénierie Informatique parcours Cybersécurité, alternant Systèmes & Réseaux à Avignon.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="img/photo.png" type="image/png">
 </head>
@@ -16,21 +16,32 @@
 
 <nav>
   <div class="wrap">
-    <a href="#hero" class="logo">leo@portfolio:~$</a>
+    <a href="#hero" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
     <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
     <ul class="links"><li><a href="#hero">Accueil</a></li><li><a href="#about">À propos</a></li><li class="dd"><a href="#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="#skills">Compétences</a></li><li><a href="#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="veille.html">Veille</a></li><li><a href="#contact">Contact</a></li></ul>
   </div>
 </nav>
 
 <header id="hero">
-  <canvas id="net" aria-hidden="true"></canvas>
   <div class="wrap">
-    <h1>Léo Gauthier</h1>
-    <p class="role" id="role" aria-live="off"></p>
-    <p class="tag">Je protège les systèmes que je construis : cinq ans d'alternance à administrer des infrastructures, cinq ans d'études pour les défendre.</p>
-    <div class="cta">
-      <a class="btn primary" href="#projets">Voir mes projets</a>
-      <a class="btn ghost" href="#contact">Me contacter</a>
+    <div class="hero-meta"><span>Portfolio · Léo Gauthier</span><span>Avignon (84)</span><span>Systèmes · Réseaux · Cybersécurité</span></div>
+    <div class="hero-grid">
+      <div>
+        <h1>Léo<br>Gauthier<span>.</span></h1>
+        <p class="role">Alternant Systèmes &amp; Réseaux, Bac+5 Cybersécurité</p>
+        <p class="tag">Je protège les systèmes que je construis : cinq ans d'alternance à administrer des infrastructures, cinq ans d'études pour les défendre.</p>
+        <div class="cta">
+          <a class="btn primary" href="#projets">Voir mes projets</a>
+          <a class="btn ghost" href="#contact">Me contacter</a>
+        </div>
+      </div>
+      <dl class="fiche">
+        <div><dt>Fiche</dt><dd>Profil technique</dd></div>
+        <div><dt>Poste</dt><dd>Admin. systèmes &amp; réseaux, Absys Informatique</dd></div>
+        <div><dt>Formation</dt><dd>Manager en Ingénierie Informatique, ESIEE-IT</dd></div>
+        <div><dt>Axe</dt><dd>Audit, pentest, CTF</dd></div>
+        <div><dt>Objectif</dt><dd>OSCP (en préparation)</dd></div>
+      </dl>
     </div>
   </div>
 </header>
@@ -115,14 +126,14 @@
   <div class="wrap">
     <h2>Compétences</h2>
     <div class="skills">
-      <div class="group"><h3><i>🖥️</i>Systèmes</h3><div class="chips"><span>Windows Server</span><span>Linux Debian</span><span>Windows 10/11</span></div></div>
-      <div class="group"><h3><i>📦</i>Virtualisation</h3><div class="chips"><span>Proxmox</span><span>Nutanix</span><span>Docker</span><span>GNS3</span></div></div>
-      <div class="group"><h3><i>🛡️</i>Réseau &amp; Sécurité</h3><div class="chips"><span>Fortinet</span><span>pfSense</span><span>VPN IPsec</span><span>VLAN</span><span>HAProxy</span><span>Stormshield</span><span>Suricata</span></div></div>
-      <div class="group"><h3><i>☁️</i>Annuaire &amp; Cloud</h3><div class="chips"><span>Active Directory</span><span>DNS/DHCP</span><span>GPO</span><span>Microsoft 365</span><span>Exchange</span></div></div>
-      <div class="group"><h3><i>📡</i>Sauvegarde &amp; Supervision</h3><div class="chips"><span>Veeam B&amp;R</span><span>Zabbix</span><span>GLPI</span><span>Wireshark</span><span>NtopNG</span></div></div>
-      <div class="group"><h3><i>💻</i>Développement</h3><div class="chips"><span>Python</span><span>PHP</span><span>JavaScript</span><span>SQL</span><span>C</span><span>Bash</span></div></div>
-      <div class="group"><h3><i>🔐</i>Cybersécurité</h3><div class="chips"><span>Pentest</span><span>Audit</span><span>CTF</span><span>Cryptographie</span><span class="wip">OSCP (en cours)</span></div></div>
-      <div class="group"><h3><i>⚙️</i>DevOps</h3><div class="chips"><span>Ansible</span><span>Git/GitHub</span><span>Docker</span></div></div>
+      <div class="group"><h3>Systèmes</h3><div class="chips"><span>Windows Server</span><span>Linux Debian</span><span>Windows 10/11</span></div></div>
+      <div class="group"><h3>Virtualisation</h3><div class="chips"><span>Proxmox</span><span>Nutanix</span><span>Docker</span><span>GNS3</span></div></div>
+      <div class="group"><h3>Réseau &amp; Sécurité</h3><div class="chips"><span>Fortinet</span><span>pfSense</span><span>VPN IPsec</span><span>VLAN</span><span>HAProxy</span><span>Stormshield</span><span>Suricata</span></div></div>
+      <div class="group"><h3>Annuaire &amp; Cloud</h3><div class="chips"><span>Active Directory</span><span>DNS/DHCP</span><span>GPO</span><span>Microsoft 365</span><span>Exchange</span></div></div>
+      <div class="group"><h3>Sauvegarde &amp; Supervision</h3><div class="chips"><span>Veeam B&amp;R</span><span>Zabbix</span><span>GLPI</span><span>Wireshark</span><span>NtopNG</span></div></div>
+      <div class="group"><h3>Développement</h3><div class="chips"><span>Python</span><span>PHP</span><span>JavaScript</span><span>SQL</span><span>C</span><span>Bash</span></div></div>
+      <div class="group"><h3>Cybersécurité</h3><div class="chips"><span>Pentest</span><span>Audit</span><span>CTF</span><span>Cryptographie</span><span class="wip">OSCP (en cours)</span></div></div>
+      <div class="group"><h3>DevOps</h3><div class="chips"><span>Ansible</span><span>Git/GitHub</span><span>Docker</span></div></div>
     </div>
   </div>
 </section>
