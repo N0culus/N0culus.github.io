@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 250" font-family="'Arial Narrow',Arial,sans-serif">
+<style>.ink{fill:#141414}.muted{fill:#5f5c55}.h{font-weight:700;font-stretch:condensed}.tt{font-family:'Courier New',monospace}</style>
+<rect width="400" height="250" fill="#f3f1ea"/>
+<rect width="400" height="6" fill="#d1202f"/>
+<path d="M372 6 H394 V28 Z" fill="#e7e4db"/>
+<text x="26" y="42" class="tt muted" font-size="11" letter-spacing="1.2">WINDOWS &amp; AD</text>
+<line x1="26" y1="54" x2="140" y2="54" stroke="#cfcbc0" stroke-width="1.5"/>
+<text x="26" y="115" class="h ink" font-size="27" letter-spacing="-.4">Intégrer un poste Ubuntu à</text><text x="26" y="149" class="h ink" font-size="27" letter-spacing="-.4">un domaine AD</text>
+<line x1="26" y1="206" x2="374" y2="206" stroke="#cfcbc0" stroke-width="1.5"/>
+<text x="26" y="228" class="tt ink" font-size="12" letter-spacing="1.5">PDF</text>
+<text x="70" y="228" class="tt muted" font-size="12" letter-spacing="1">· BTS</text>
+</svg>
