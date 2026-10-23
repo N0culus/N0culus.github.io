@@ -94,6 +94,11 @@
     <line class="la" x1="20" y1="74" x2="60" y2="74" marker-end="url(#aa)"/><text class="m" x="74" y="78">flux autorisé entre VLAN</text>
     <line class="ld" x1="20" y1="98" x2="60" y2="98" marker-end="url(#ai)"/><text class="m" x="74" y="102">remontée de supervision</text>
     <rect class="dash" x="20" y="114" width="40" height="16"/><text class="m" x="74" y="127">règle de filtrage</text>
+    <rect class="ext" x="20" y="150" width="360" height="92"/>
+    <text class="t" x="34" y="174">SECOURS · L3-CTF2026</text>
+    <text class="m" x="34" y="194">Cisco 2960X : pare-feu + routage</text>
+    <text class="m" x="34" y="210">prend le relais si le Fortigate</text>
+    <text class="m" x="34" y="226">ou le L2 tombe en panne</text>
     <text class="s" x="900" y="30">CONTINUITÉ DE SERVICE</text>
     <text class="big" x="900" y="76"><tspan fill="var(--accent)">&lt;</tspan>15</text>
     <text class="s" x="900" y="92">RTO · MINUTES</text>
@@ -106,19 +111,19 @@
     <line class="l" x1="600" y1="60" x2="600" y2="92" marker-end="url(#ai)"/>
     <rect class="box" x="440" y="92" width="320" height="64"/>
     <text class="t" x="456" y="115">PARE-FEU FORTIGATE</text>
-    <text class="m" x="456" y="133">212.1 · 213.1</text>
-    <text class="m" x="456" y="147">sortie Internet des VLAN 20 et 30</text>
+    <text class="m" x="456" y="133">pare-feu + routage inter-VLAN · ACL · PBR</text>
+    <text class="m" x="456" y="147">212.1 · 213.1 · 10.10.0.6</text>
     <line class="l" x1="600" y1="156" x2="600" y2="188" marker-end="url(#ai)"/>
     <text class="s" x="612" y="176">PBR</text>
     <rect class="shadow" x="406" y="194" width="400" height="74"/>
     <rect class="hi" x="400" y="188" width="400" height="74"/>
-    <text class="t" x="416" y="212">L3-CTF2026 · CISCO 2960X</text>
-    <text class="m" x="416" y="230">routage inter-VLAN · ACL · PBR</text>
-    <text class="m" x="416" y="246">212.254 · 213.254 · 10.10.0.6</text>
+    <text class="t" x="416" y="212">L2-CTF2026 · CISCO 2960X</text>
+    <text class="m" x="416" y="230">switch de distribution · trunk 802.1Q</text>
+    <text class="m" x="416" y="246">passerelles VLAN portées par le Fortigate</text>
     <path class="l" d="M600 262V300M200 300H1000M200 300V330M600 300V330M1000 300V330"/>
-    <text class="s" x="212" y="321">SVI 213.254</text>
-    <text class="s" x="612" y="321">SVI 212.254</text>
-    <text class="s" x="1012" y="321">SVI 10.10.0.6</text>
+    <text class="s" x="212" y="321">GW 213.254</text>
+    <text class="s" x="612" y="321">GW 212.254</text>
+    <text class="s" x="1012" y="321">GW 10.10.0.6</text>
     <rect class="zone" x="20" y="330" width="360" height="500"/>
     <rect class="tab" x="20" y="330" width="360" height="28"/>
     <text class="tabt" x="34" y="349">VLAN 30 · COMPET</text>
@@ -129,8 +134,8 @@
     <text class="m" x="54" y="436">isolation client à client (P2P drop)</text>
     <line class="l" x1="200" y1="450" x2="200" y2="478" marker-end="url(#ai)"/>
     <rect class="box" x="40" y="478" width="320" height="52"/>
-    <text class="t" x="54" y="502">SWITCH L2-CTF2026</text>
-    <text class="m" x="54" y="520">213.2 · cascade sur le port Gi1/0/24</text>
+    <text class="t" x="54" y="502">SWITCH D'ACCÈS</text>
+    <text class="m" x="54" y="520">213.2 · cascade depuis le L2 (Gi1/0/24)</text>
     <line class="l" x1="200" y1="530" x2="200" y2="558" marker-end="url(#ai)"/>
     <rect class="shadow" x="46" y="564" width="320" height="108"/>
     <rect class="hi" x="40" y="558" width="320" height="108"/>
@@ -216,11 +221,11 @@
     <text class="mx" x="854" y="796">seule exception : CTFd → Galera</text>
     <text class="m" x="854" y="810">ports 3306 et 22</text>
     <line class="la" x1="360" y1="600" x2="420" y2="600" marker-end="url(#aa)"/>
-    <text class="tag" x="390" y="590" text-anchor="middle">3306</text>
+    <rect x="371" y="591" width="38" height="18" fill="var(--bg)"/><text class="tag" x="390" y="604" text-anchor="middle">3306</text>
     <line class="ld" x1="360" y1="724" x2="420" y2="724" marker-end="url(#ai)"/>
-    <text class="s" x="390" y="714" text-anchor="middle">agents</text>
+    <rect x="364" y="715" width="52" height="18" fill="var(--bg)"/><text class="s" x="390" y="728" text-anchor="middle">agents</text>
     <line class="l" x1="780" y1="442" x2="840" y2="442" marker-start="url(#ai)" marker-end="url(#ai)"/>
-    <text class="s" x="810" y="432" text-anchor="middle">vmbr1</text>
+    <rect x="787" y="433" width="46" height="18" fill="var(--bg)"/><text class="s" x="810" y="446" text-anchor="middle">vmbr1</text>
   </svg>
 
     </div>
