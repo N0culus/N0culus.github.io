@@ -204,9 +204,10 @@ button.btn{cursor:pointer;font:inherit;font-weight:600;justify-self:start}
 .shot{margin-top:1.2rem;border:1px dashed var(--line);overflow:hidden;background:var(--bg);color:var(--muted);font-family:var(--mono);font-size:.8rem;aspect-ratio:16/8;display:grid;place-items:center;position:relative}
 .shot:has(img){aspect-ratio:auto;display:block;font-size:0;background:#fff;border:1px solid var(--ink);cursor:zoom-in}
 .shot img{display:block;width:100%;height:auto}
-dialog.zoom{margin:auto;max-width:94vw;max-height:94vh;width:auto;padding:0;border:1px solid var(--ink);background:#fff;overflow:visible;cursor:zoom-out}
-dialog.zoom::backdrop{background:rgba(20,20,20,.75)}
-dialog.zoom img{display:block;max-width:94vw;max-height:94vh;width:auto;height:auto}
+dialog.zoom{margin:auto;max-width:95vw;max-height:95vh;width:fit-content;height:fit-content;padding:0;border:0;background:transparent;overflow:visible;cursor:zoom-out}
+dialog.zoom,dialog.zoom:focus,dialog.zoom:focus-visible{outline:none}
+dialog.zoom::backdrop{background:rgba(20,20,20,.82)}
+dialog.zoom img{display:block;max-width:95vw;max-height:95vh;width:auto;height:auto}
 dialog.zoom[open]{animation:pop .2s ease-out}
 @keyframes pop{from{opacity:0;transform:scale(.98)}}
 .docs{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;align-items:start}
