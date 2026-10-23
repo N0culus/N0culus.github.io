@@ -11,6 +11,34 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="icon" href="img/photo.png" type="image/png">
+<style>
+.schema{margin:0 0 2rem}
+.schema-box{border:1.5px solid var(--ink);background:var(--bg);box-shadow:8px 8px 0 var(--accent);overflow-x:auto}
+.schema-box svg{display:block;width:100%;min-width:980px;height:auto}
+.schema .cap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:.3rem 1.5rem;font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:1rem}
+.schema .zone{fill:none;stroke:var(--ink);stroke-width:1.5}
+.schema .tab{fill:var(--ink)}
+.schema .tabt{font:500 11px var(--mono);letter-spacing:.07em;fill:var(--bg)}
+.schema .tabr{font:400 11px var(--mono);fill:var(--bg);opacity:.8}
+.schema .box{fill:var(--bg2);stroke:var(--ink);stroke-width:1}
+.schema .chip{fill:var(--bg2);stroke:var(--line);stroke-width:1}
+.schema .hi{fill:var(--bg2);stroke:var(--ink);stroke-width:1.5}
+.schema .shadow{fill:var(--ink)}
+.schema .dash{fill:none;stroke:var(--accent);stroke-width:1.2;stroke-dasharray:5 4}
+.schema .ext{fill:none;stroke:var(--ink);stroke-width:1.2;stroke-dasharray:4 3}
+.schema .osd{fill:var(--bg);stroke:var(--ink);stroke-width:1}
+.schema .t{font:800 14px var(--sans);font-stretch:80%;letter-spacing:.02em;fill:var(--ink)}
+.schema .m{font:400 11px var(--mono);fill:var(--muted)}
+.schema .mx{font:400 11px var(--mono);fill:var(--ink)}
+.schema .s{font:400 10px var(--mono);fill:var(--muted)}
+.schema .tag{font:500 11px var(--mono);fill:var(--accent)}
+.schema .big{font:900 46px var(--sans);font-stretch:70%;fill:var(--ink)}
+.schema .l{stroke:var(--ink);stroke-width:1.5;fill:none}
+.schema .la{stroke:var(--accent);stroke-width:2;fill:none}
+.schema .ld{stroke:var(--ink);stroke-width:1.2;fill:none;stroke-dasharray:5 4}
+.schema .mk-i{fill:var(--ink)}
+.schema .mk-a{fill:var(--accent)}
+</style>
 </head>
 <body data-page="formation">
 <nav>
@@ -31,8 +59,7 @@
 
 <section class="sub"><div class="wrap">
 <h2>Projet : CTF « Une nuit pour hacker »</h2>
-<div class="case">
-  <div class="panel">
+<div class="panel">
     <div class="facts">
       <div><b>150+</b><span>participants</span></div>
       <div><b>130+</b><span>challenges</span></div>
@@ -41,20 +68,182 @@
     <ul>
       <li>Co-organisation de l'événement</li>
       <li>Conception de challenges : Active Directory, WiFi, Web, SQLi, Reverse, OSINT</li>
-      <li>Infrastructure d'hébergement sous Proxmox, derrière un Fortigate</li>
+      <li>Infrastructure d'hébergement sous Proxmox, derrière un pare-feu Fortigate</li>
     </ul>
     <h3>Difficultés et retour d'expérience</h3>
     <ul>
       <li>J'ai déployé le stockage distribué Ceph avant de constituer le cluster Proxmox. Il aurait fallu faire l'inverse : monter le cluster d'abord, puis Ceph par-dessus.</li>
-      <li>Le second switch fourni ne faisait pas de routage. J'ai apporté un pare-feu Fortigate, placé devant ce switch, pour assurer la solution de secours.</li>
+      <li>Le switch fourni ne faisait pas de routage comme prévu. Nous avons basculé sur un Fortigate en périphérie pour assurer le routage et la solution de secours.</li>
     </ul>
-    <!-- À compléter si possible : nombre de VM, isolation des participants, un challenge que tu as conçu expliqué de bout en bout -->
-    <div class="chips"><span>Proxmox</span><span>Fortigate</span><span>Active Directory</span><span>WiFi</span><span>Web</span><span>SQLi</span><span>Reverse</span><span>OSINT</span></div>
-    <a class="back" href="ctf.html">Voir la page CTF →</a>
+    <div class="chips"><span>Proxmox</span><span>Ceph</span><span>Fortigate</span><span>Cisco</span><span>CTFd</span><span>Galera</span><span>Ansible</span><span>Docker</span></div>
+    <a class="back" href="ctf.html">Voir la page CTF &rarr;</a>
   </div>
-  <div class="shot"><img src="img/ctf-visuel.svg" alt="CTF « Une nuit pour hacker »" loading="lazy" onerror="this.remove()"></div>
-</div>
-</div></section>
+
+  <h3 class="sub-title">Sch&eacute;ma de l'infrastructure</h3>
+  <div class="schema">
+    <div class="schema-box">
+  <svg viewBox="0 0 1200 840" role="img" aria-labelledby="svgt svgd">
+    <title id="svgt">Schéma de l'infrastructure CTF NHK26</title>
+    <desc id="svgd">Internet, pare-feu Fortigate, switch L3 Cisco, puis trois VLAN : COMPET (joueurs, CTFd, Docker), MGMT (Proxmox, Galera, supervision) et SYNC (Ceph).</desc>
+    <defs>
+      <marker id="ai" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk-i"/></marker>
+      <marker id="aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk-a"/></marker>
+    </defs>
+    <text class="s" x="20" y="30">LÉGENDE</text>
+    <line class="l" x1="20" y1="50" x2="60" y2="50"/><text class="m" x="74" y="54">lien réseau</text>
+    <line class="la" x1="20" y1="74" x2="60" y2="74" marker-end="url(#aa)"/><text class="m" x="74" y="78">flux autorisé entre VLAN</text>
+    <line class="ld" x1="20" y1="98" x2="60" y2="98" marker-end="url(#ai)"/><text class="m" x="74" y="102">remontée de supervision</text>
+    <rect class="dash" x="20" y="114" width="40" height="16"/><text class="m" x="74" y="127">règle de filtrage</text>
+    <text class="s" x="900" y="30">CONTINUITÉ DE SERVICE</text>
+    <text class="big" x="900" y="76"><tspan fill="var(--accent)">&lt;</tspan>15</text>
+    <text class="s" x="900" y="92">RTO · MINUTES</text>
+    <text class="big" x="1040" y="76"><tspan fill="var(--accent)">&lt;</tspan>10</text>
+    <text class="s" x="1040" y="92">RPO · MINUTES</text>
+    <text class="m" x="900" y="116">sauvegarde quotidienne</text>
+    <text class="m" x="900" y="131">test de restauration mensuel</text>
+    <rect class="ext" x="470" y="20" width="260" height="40"/>
+    <text class="t" x="600" y="45" text-anchor="middle">INTERNET</text>
+    <line class="l" x1="600" y1="60" x2="600" y2="92" marker-end="url(#ai)"/>
+    <rect class="box" x="440" y="92" width="320" height="64"/>
+    <text class="t" x="456" y="115">PARE-FEU FORTIGATE</text>
+    <text class="m" x="456" y="133">212.1 · 213.1</text>
+    <text class="m" x="456" y="147">sortie Internet des VLAN 20 et 30</text>
+    <line class="l" x1="600" y1="156" x2="600" y2="188" marker-end="url(#ai)"/>
+    <text class="s" x="612" y="176">PBR</text>
+    <rect class="shadow" x="406" y="194" width="400" height="74"/>
+    <rect class="hi" x="400" y="188" width="400" height="74"/>
+    <text class="t" x="416" y="212">L3-CTF2026 · CISCO 2960X</text>
+    <text class="m" x="416" y="230">routage inter-VLAN · ACL · PBR</text>
+    <text class="m" x="416" y="246">212.254 · 213.254 · 10.10.0.6</text>
+    <path class="l" d="M600 262V300M200 300H1000M200 300V330M600 300V330M1000 300V330"/>
+    <text class="s" x="212" y="321">SVI 213.254</text>
+    <text class="s" x="612" y="321">SVI 212.254</text>
+    <text class="s" x="1012" y="321">SVI 10.10.0.6</text>
+    <rect class="zone" x="20" y="330" width="360" height="500"/>
+    <rect class="tab" x="20" y="330" width="360" height="28"/>
+    <text class="tabt" x="34" y="349">VLAN 30 · COMPET</text>
+    <text class="tabr" x="366" y="349" text-anchor="end">192.168.213.0/24</text>
+    <rect class="box" x="40" y="378" width="320" height="72"/>
+    <text class="t" x="54" y="402">JOUEURS</text>
+    <text class="m" x="54" y="420">Wi-Fi NHK26WIFI · filaire · DHCP 2 h</text>
+    <text class="m" x="54" y="436">isolation client à client (P2P drop)</text>
+    <line class="l" x1="200" y1="450" x2="200" y2="478" marker-end="url(#ai)"/>
+    <rect class="box" x="40" y="478" width="320" height="52"/>
+    <text class="t" x="54" y="502">SWITCH L2-CTF2026</text>
+    <text class="m" x="54" y="520">213.2 · cascade sur le port Gi1/0/24</text>
+    <line class="l" x1="200" y1="530" x2="200" y2="558" marker-end="url(#ai)"/>
+    <rect class="shadow" x="46" y="564" width="320" height="108"/>
+    <rect class="hi" x="40" y="558" width="320" height="108"/>
+    <text class="t" x="54" y="582">CTFD + MAXSCALE</text>
+    <text class="tag" x="346" y="582" text-anchor="end">.10</text>
+    <text class="mx" x="54" y="602">Nginx :443 → Gunicorn → CTFd</text>
+    <text class="m" x="54" y="618">Redis · MaxScale en local (3306)</text>
+    <text class="m" x="54" y="634">UFW · Fail2Ban</text>
+    <text class="m" x="54" y="650">agents Zabbix et Wazuh</text>
+    <line class="l" x1="200" y1="672" x2="200" y2="694" marker-end="url(#ai)"/>
+    <rect class="box" x="40" y="694" width="320" height="100"/>
+    <text class="t" x="54" y="718">VM DOCKER</text>
+    <text class="tag" x="346" y="718" text-anchor="end">.11</text>
+    <text class="mx" x="54" y="736">challenges · réseau challenges-net</text>
+    <text class="m" x="54" y="752">registry local :5000 · runner CI/CD</text>
+    <text class="m" x="54" y="768">ports 32768–60999 ouverts aux joueurs</text>
+    <text class="m" x="54" y="784">containers isolés (DOCKER-USER)</text>
+    <rect class="zone" x="400" y="330" width="400" height="500"/>
+    <rect class="tab" x="400" y="330" width="400" height="28"/>
+    <text class="tabt" x="414" y="349">VLAN 20 · MGMT</text>
+    <text class="tabr" x="786" y="349" text-anchor="end">192.168.212.0/24</text>
+    <rect class="box" x="420" y="378" width="360" height="132"/>
+    <text class="t" x="434" y="400">CLUSTER PROXMOX · HA</text>
+    <text class="tag" x="766" y="400" text-anchor="end">3 × HP</text>
+    <rect class="chip" x="436" y="412" width="104" height="44"/><text class="mx" x="446" y="431">NHKproxmox1</text><text class="m" x="446" y="446">.212.11</text>
+    <rect class="chip" x="548" y="412" width="104" height="44"/><text class="mx" x="558" y="431">NHKproxmox2</text><text class="m" x="558" y="446">.212.12</text>
+    <rect class="chip" x="660" y="412" width="104" height="44"/><text class="mx" x="670" y="431">NHKproxmox3</text><text class="m" x="670" y="446">.212.13</text>
+    <text class="m" x="434" y="478">RAID 1 OS · bridge vmbr1 dédié à Ceph</text>
+    <text class="m" x="434" y="494">HA : relance auto des VM sur un autre nœud</text>
+    <rect class="box" x="420" y="530" width="360" height="134"/>
+    <text class="t" x="434" y="552">MARIADB GALERA</text>
+    <text class="tag" x="766" y="552" text-anchor="end">quorum 2/3</text>
+    <rect class="chip" x="436" y="564" width="104" height="44"/><text class="mx" x="446" y="583">node1</text><text class="m" x="446" y="598">.212.31</text>
+    <rect class="chip" x="548" y="564" width="104" height="44"/><text class="mx" x="558" y="583">node2</text><text class="m" x="558" y="598">.212.32</text>
+    <rect class="chip" x="660" y="564" width="104" height="44"/><text class="mx" x="670" y="583">node3</text><text class="m" x="670" y="598">.212.33</text>
+    <text class="m" x="434" y="630">failover automatique via MaxScale</text>
+    <text class="m" x="434" y="646">dump toutes les 30 min sur node3 · 24 h</text>
+    <rect class="box" x="420" y="684" width="172" height="64"/>
+    <text class="t" x="434" y="706">ZABBIX</text><text class="tag" x="578" y="706" text-anchor="end">.19</text>
+    <text class="m" x="434" y="724">agents en push · SNMP</text>
+    <text class="m" x="434" y="738">quorum · Fail2Ban</text>
+    <rect class="box" x="608" y="684" width="172" height="64"/>
+    <text class="t" x="622" y="706">WAZUH</text><text class="tag" x="766" y="706" text-anchor="end">.18</text>
+    <text class="m" x="622" y="724">SIEM · réponse active</text>
+    <text class="m" x="622" y="738">bannissement IP 5 min</text>
+    <rect class="chip" x="420" y="764" width="112" height="22"/><text class="mx" x="432" y="779">ANSIBLE .17</text>
+    <rect class="chip" x="544" y="764" width="112" height="22"/><text class="mx" x="556" y="779">TAILSCALE .16</text>
+    <rect class="chip" x="668" y="764" width="112" height="22"/><text class="mx" x="680" y="779">NTP .14</text>
+    <rect class="chip" x="420" y="794" width="360" height="26"/>
+    <text class="mx" x="432" y="811">Contrôleur Wi-Fi .5 → 3 bornes (.6 · .7 · .8)</text>
+    <rect class="zone" x="820" y="330" width="360" height="500"/>
+    <rect class="tab" x="820" y="330" width="360" height="28"/>
+    <text class="tabt" x="834" y="349">VLAN 10 · SYNC</text>
+    <text class="tabr" x="1166" y="349" text-anchor="end">10.10.0.0/29</text>
+    <rect class="box" x="840" y="378" width="320" height="232"/>
+    <text class="t" x="854" y="400">STOCKAGE CEPH</text>
+    <text class="tag" x="1146" y="400" text-anchor="end">pool ×3</text>
+    <rect class="chip" x="852" y="412" width="94" height="150"/>
+    <text class="mx" x="862" y="430">Proxmox 1</text><text class="m" x="862" y="446">10.10.0.1</text><text class="s" x="862" y="460">Gi1/0/21</text>
+    <rect class="osd" x="862" y="472" width="74" height="20"/><text class="s" x="872" y="486">OSD 1 To</text>
+    <rect class="osd" x="862" y="498" width="74" height="20"/><text class="s" x="872" y="512">OSD 1 To</text>
+    <rect class="osd" x="862" y="524" width="74" height="20"/><text class="s" x="872" y="538">OSD 1 To</text>
+    <rect class="chip" x="954" y="412" width="94" height="150"/>
+    <text class="mx" x="964" y="430">Proxmox 2</text><text class="m" x="964" y="446">10.10.0.2</text><text class="s" x="964" y="460">Gi1/0/22</text>
+    <rect class="osd" x="964" y="472" width="74" height="20"/><text class="s" x="974" y="486">OSD 1 To</text>
+    <rect class="osd" x="964" y="498" width="74" height="20"/><text class="s" x="974" y="512">OSD 1 To</text>
+    <rect class="osd" x="964" y="524" width="74" height="20"/><text class="s" x="974" y="538">OSD 1 To</text>
+    <rect class="chip" x="1056" y="412" width="94" height="150"/>
+    <text class="mx" x="1066" y="430">Proxmox 3</text><text class="m" x="1066" y="446">10.10.0.3</text><text class="s" x="1066" y="460">Gi1/0/23</text>
+    <rect class="osd" x="1066" y="472" width="74" height="20"/><text class="s" x="1076" y="486">OSD 1 To</text>
+    <rect class="osd" x="1066" y="498" width="74" height="20"/><text class="s" x="1076" y="512">OSD 1 To</text>
+    <rect class="osd" x="1066" y="524" width="74" height="20"/><text class="s" x="1076" y="538">OSD 1 To</text>
+    <text class="m" x="854" y="584">MON + MGR sur chaque nœud</text>
+    <text class="m" x="854" y="598">3 OSD par nœud · RAID 0 individuel</text>
+    <rect class="dash" x="840" y="630" width="320" height="68"/>
+    <text class="t" x="854" y="652">ACL_VLAN10_SYNC</text>
+    <text class="m" x="854" y="670">trafic autorisé dans le /29 uniquement</text>
+    <text class="m" x="854" y="686">reste bloqué et journalisé</text>
+    <rect class="dash" x="840" y="716" width="320" height="100"/>
+    <text class="t" x="854" y="738">ISOLATION INTER-VLAN</text>
+    <text class="m" x="854" y="758">joueurs ↔ administration : refusé</text>
+    <text class="m" x="854" y="774">joueurs et MGMT → Ceph : refusé</text>
+    <text class="mx" x="854" y="796">seule exception : CTFd → Galera</text>
+    <text class="m" x="854" y="810">ports 3306 et 22</text>
+    <line class="la" x1="360" y1="600" x2="420" y2="600" marker-end="url(#aa)"/>
+    <text class="tag" x="390" y="590" text-anchor="middle">3306</text>
+    <line class="ld" x1="360" y1="724" x2="420" y2="724" marker-end="url(#ai)"/>
+    <text class="s" x="390" y="714" text-anchor="middle">agents</text>
+    <line class="l" x1="780" y1="442" x2="840" y2="442" marker-start="url(#ai)" marker-end="url(#ai)"/>
+    <text class="s" x="810" y="432" text-anchor="middle">vmbr1</text>
+  </svg>
+
+    </div>
+    <div class="cap"><span>Fig. 1 &middot; Topologie logique, adresses abr&eacute;g&eacute;es (212.x = 192.168.212.x)</span><span>&Eacute;quipe CTF 2026</span></div>
+  </div>
+
+  <div class="facts">
+    <div><b>3</b><span>VLAN isol&eacute;s</span></div>
+    <div><b>3+3</b><span>n&oelig;uds Proxmox et Galera</span></div>
+    <div><b>&times;3</b><span>r&eacute;plication Ceph</span></div>
+    <div><b>1</b><span>git push pour d&eacute;ployer</span></div>
+  </div>
+
+  <h3 class="sub-title">Principes de conception</h3>
+  <div class="panel">
+    <div class="steps">
+      <div><h4>Isolation</h4><p>Les joueurs n'atteignent jamais le VLAN d'administration. Seule la VM CTFd traverse vers les n&oelig;uds Galera, et les containers de challenges sont bloqu&eacute;s par des r&egrave;gles <code>DOCKER-USER</code>.</p></div>
+      <div><h4>Haute disponibilit&eacute;</h4><p>Le cluster Proxmox relance les VM d'un n&oelig;ud tomb&eacute;. Galera garde son quorum avec 2 n&oelig;uds sur 3, et MaxScale redirige le trafic en environ 2 secondes, sans coupure visible pour les joueurs.</p></div>
+      <div><h4>Supervision</h4><p>Zabbix suit la disponibilit&eacute; et les ressources, Wazuh d&eacute;tecte les attaques et bannit automatiquement les IP en cause pendant 5 minutes.</p></div>
+      <div><h4>D&eacute;ploiement</h4><p>Un <code>git push</code> sur <code>main</code> lance un pipeline GitLab CI/CD : validation des manifestes, lint des Dockerfiles, build des images puis cr&eacute;ation des challenges via l'API de CTFd.</p></div>
+      <div><h4>Maintenance</h4><p>Snapshot obligatoire avant toute modification, v&eacute;rification de l'&eacute;tat Ceph, journal des changements et proc&eacute;dure de retour arri&egrave;re document&eacute;e.</p></div>
+    </div>
+  </div></section>
 
 <section class="sub"><div class="wrap">
 <h2>Mémoire technique</h2>
