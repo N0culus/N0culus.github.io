@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sauvegarde & restauration — Documentation</title>
+<meta name="description" content="Sauvegarder un VPS avec rsync : quels dossiers sauvegarder, script incrémental vers un disque externe et procédure de restauration sur un nouveau VPS.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Documentation · Stack VPS souverain · 7 / 9</div>
+    <h1>Sauvegarde &amp; restauration</h1>
+    <div class="wu-meta"><span class="os">rsync</span><span>SSH</span><span>incrémental</span></div>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+
+  <p class="lead">La solution la plus propre est <code>rsync</code> : il ne copie que ce qui a changé, donc les sauvegardes suivantes sont rapides. Tout part du VPS vers une machine locale, en SSH sur le port custom.</p>
+
+  <h2>Ce qu'il faut sauvegarder</h2>
+  <div class="wu-table"><table>
+    <thead><tr><th>Dossier</th><th>Contenu</th></tr></thead>
+    <tbody>
+      <tr><td><code>/opt/mailcow-dockerized/data</code></td><td>Configs Mailcow, certificats, nginx custom</td></tr>
+      <tr><td><code>/opt/mailcow-dockerized/mailcow.conf</code></td><td>Config principale Mailcow</td></tr>
+      <tr><td><code>/opt/nextcloud</code></td><td><code>docker-compose.yml</code> + données Nextcloud</td></tr>
+      <tr><td><code>/opt/lldap</code></td><td>Si installé</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Script de sauvegarde</h2>
+<pre><code>#!/bin/bash
+DATE=$(date +%Y-%m-%d)
+DEST="/media/leo/DISQUE/sauvegardevps/vps-$DATE"
+VPS="leo@IP_VPS"
+
+mkdir -p "$DEST"
+
+echo "=== Sauvegarde Mailcow ==="
+rsync -avz -e "ssh -p 51478" --progress \
+  --exclude='data/assets/ssl/backups' \
+  --exclude='data/Dockerfiles' \
+  $VPS:/opt/mailcow-dockerized/data/ "$DEST/mailcow-data/"
+rsync -avz -e "ssh -p 51478" $VPS:/opt/mailcow-dockerized/mailcow.conf "$DEST/"
+
+echo "=== Sauvegarde Nextcloud ==="
+rsync -avz -e "ssh -p 51478" --progress \
+  $VPS:/opt/nextcloud/ "$DEST/nextcloud/"
+
+echo "=== Sauvegarde site vitrine ==="
+rsync -avz -e "ssh -p 51478" --progress \
+  $VPS:/opt/mailcow-dockerized/data/web/privatiq/ "$DEST/site-privatiq/"
+
+echo "=== Terminé : $DEST ==="</code></pre>
+  <p>Chaque exécution crée un dossier daté ; grâce à <code>rsync</code>, seules les données modifiées transitent réellement.</p>
+
+  <h2>Restauration sur un nouveau VPS</h2>
+  <p>Prérequis : un VPS OVH (Ubuntu 24.04), la sauvegarde locale disponible et l'accès SSH au nouveau serveur. La restauration consiste à :</p>
+  <ol>
+    <li>Préparer le nouveau VPS (Docker, arborescence <code>/opt</code>).</li>
+    <li>Restaurer les données Mailcow et <code>mailcow.conf</code>, puis relancer la pile.</li>
+    <li>Restaurer Nextcloud (<code>docker-compose.yml</code> + données).</li>
+    <li>Restaurer le site vitrine.</li>
+    <li>Réappliquer les modifications manuelles faites <em>dans</em> les conteneurs (elles ne sont pas sauvegardées) — typiquement l'autoconfig SMTP de Mailcow.</li>
+    <li>Vérifier le fonctionnement des services.</li>
+  </ol>
+
+  <div class="note"><b>Points clés</b>Le DNS OVH n'a rien à reconfigurer si l'IP du nouveau VPS est identique ; sinon, mettre à jour tous les A et AAAA. Les certificats SSL sont inclus dans la sauvegarde, donc restaurés directement — pas besoin de les régénérer. La base Mailcow (mails, comptes) est dans <code>data/</code>, donc bien couverte.</div>
+
+  <a class="back" href="documentation.html">← Toute la documentation</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collabora Online — Documentation</title>
+<meta name="description" content="Éditer les documents Office dans Nextcloud avec Collabora Online en Docker : terminaison SSL déléguée, WebSockets en HTTP/1.1 et communication HTTPS interne.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Documentation · Stack VPS souverain · 5 / 9</div>
+    <h1>Collabora Online</h1>
+    <div class="wu-meta"><span class="os">Docker</span><span>Nextcloud Office</span><span>WebSockets</span></div>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+
+  <p class="lead">Collabora Online permet d'ouvrir et d'éditer Word, Excel et PowerPoint directement dans le navigateur depuis Nextcloud, sans téléchargement. Trois pièges s'enchaînent : la terminaison SSL, les WebSockets en HTTP/2, et la communication interne en HTTP.</p>
+
+  <h2>Déployer Collabora en Docker</h2>
+<pre><code>sudo mkdir /opt/collabora
+sudo nano /opt/collabora/docker-compose.yml</code></pre>
+<pre><code>services:
+  collabora:
+    image: collabora/code:latest
+    container_name: collabora
+    restart: unless-stopped
+    ports:
+      - "172.17.0.1:9980:9980"
+    environment:
+      - aliasgroup1=https://cloud.privatiq.fr
+      - DONT_GEN_SSL_CERT=YES
+      - server_name=collabora.privatiq.fr
+      - dictionaries=fr_FR en_GB
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=true
+    cap_add:
+      - MKNOD</code></pre>
+  <div class="note"><b>SSL délégué</b>Les paramètres <code>ssl.enable=false</code> et <code>ssl.termination=true</code> sont indispensables. Sans eux, Collabora cherche un certificat SSL interne qui n'existe pas et crashe en boucle (exit code 139). Le SSL est assuré par le nginx de Mailcow.</div>
+
+  <h2>Vhost nginx et WebSockets</h2>
+  <p>On crée un vhost nginx dans le dossier de Mailcow qui proxifie vers <code>172.17.0.1:9980</code>, avec un bloc dédié <code>/cool</code> pour l'édition temps réel.</p>
+  <div class="note"><b>HTTP/1.1 obligatoire</b>Le bloc <code>/cool</code> exige <code>proxy_http_version 1.1</code> : les WebSockets (édition en temps réel) sont incompatibles avec HTTP/2. Sans cette directive, le document s'ouvre mais affiche « Échec du chargement du document ».</div>
+
+  <h2>DNS et certificat</h2>
+  <div class="wu-table"><table>
+    <thead><tr><th>Sous-domaine</th><th>Type</th><th>Cible</th></tr></thead>
+    <tbody>
+      <tr><td>collabora</td><td>A</td><td>IPv4 du VPS</td></tr>
+      <tr><td>collabora</td><td>AAAA</td><td>IPv6 du VPS</td></tr>
+    </tbody>
+  </table></div>
+  <p>On ajoute <code>collabora.privatiq.fr</code> à <code>ADDITIONAL_SAN</code> dans <code>mailcow.conf</code>, puis on <b>recrée</b> le conteneur acme (un simple <code>restart</code> ne suffit pas à prendre en compte la nouvelle variable) et on attend l'émission du certificat.</p>
+
+  <h2>Connecter Collabora à Nextcloud</h2>
+  <p>Dans Nextcloud : <em>Administration → Applications → Nextcloud Office → Activer</em>, puis <em>Administration → Nextcloud Office</em> :</p>
+  <ul>
+    <li>Sélectionner « Utiliser votre propre serveur »</li>
+    <li>URL : <code>https://collabora.privatiq.fr</code></li>
+    <li>Enregistrer — le bandeau vert doit afficher « Le serveur Collabora Online est accessible ».</li>
+  </ul>
+
+  <h2>Corriger la communication HTTP → HTTPS</h2>
+  <div class="note"><b>Étape critique</b>Sans cette correction, Collabora contacte Nextcloud en HTTP, reçoit une redirection 301 qu'il ne suit pas, et l'édition échoue (« Échec du chargement du document »). On force la communication en HTTPS via la configuration Nextcloud (<code>occ config</code>), puis on redémarre Nextcloud.</div>
+
+  <h2>Test final</h2>
+  <p>Dans les fichiers Nextcloud, cliquer sur un <code>.docx</code>, <code>.xlsx</code> ou <code>.pptx</code> : le document doit s'ouvrir directement dans le navigateur avec l'éditeur Collabora.</p>
+
+  <a class="back" href="documentation.html">← Toute la documentation</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

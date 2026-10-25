@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Serveur mail avec Mailcow — Documentation</title>
+<meta name="description" content="Déploiement d'un serveur mail Mailcow dockerisé sur VPS : DNS, DKIM, SPF, filtrage Docker via DOCKER-USER et priorité SMTP 587 STARTTLS.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Documentation · Stack VPS souverain · 3 / 9</div>
+    <h1>Serveur mail avec Mailcow</h1>
+    <div class="wu-meta"><span class="os">Docker</span><span>Postfix / Dovecot</span><span>DKIM · SPF</span><span>iptables</span></div>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+
+  <p class="lead">Mailcow fournit une messagerie complète (SMTP, IMAP, webmail SOGo, antispam Rspamd) en une pile de conteneurs. Le gros du travail n'est pas l'installation mais la réputation (DNS, DKIM, SPF, reverse DNS) et le fait que Docker contourne le pare-feu.</p>
+
+  <h2>Installation</h2>
+<pre><code>cd /opt
+sudo git clone https://github.com/mailcow/mailcow-dockerized
+cd mailcow-dockerized/
+sudo ./generate_config.sh</code></pre>
+  <p>Réponses au script de configuration :</p>
+  <div class="wu-table"><table>
+    <tbody>
+      <tr><td>FQDN</td><td><code>mail.privatiq.fr</code></td></tr>
+      <tr><td>Timezone</td><td><code>UTC</code></td></tr>
+      <tr><td>Branch</td><td><code>1</code> (stable)</td></tr>
+      <tr><td>IPv6</td><td><code>Y</code></td></tr>
+    </tbody>
+  </table></div>
+<pre><code>sudo docker compose pull
+sudo docker compose up -d</code></pre>
+  <p>L'interface d'administration est ensuite accessible sur <code>https://mail.privatiq.fr</code>. On y ajoute le domaine, puis la clé <b>DKIM</b> via <em>Système → Configuration → Options</em>, qu'on recopie dans les enregistrements DNS chez OVH.</p>
+
+  <h2>Enregistrements DNS et réputation</h2>
+  <p>Le SPF autorise les serveurs qui ont le droit d'émettre pour le domaine :</p>
+  <div class="wu-table"><table>
+    <thead><tr><th>Mécanisme</th><th>Rôle</th></tr></thead>
+    <tbody>
+      <tr><td><code>mx</code></td><td>Autorise le serveur mail du domaine</td></tr>
+      <tr><td><code>a</code></td><td>Autorise l'adresse du domaine</td></tr>
+      <tr><td><code>ip4</code></td><td>Bétonne la configuration avec l'IP explicite</td></tr>
+    </tbody>
+  </table></div>
+  <p>Le <b>reverse DNS</b> (PTR) a aussi été corrigé côté OVH pour qu'il corresponde à <code>mail.privatiq.fr</code> : sans PTR cohérent, la plupart des serveurs classent les mails en spam.</p>
+
+  <h2>Le piège : UFW n'arrête pas Docker</h2>
+  <p>UFW était actif, mais les ports des conteneurs restaient joignables malgré les règles de blocage.</p>
+  <ul>
+    <li>UFW filtre la chaîne <code>INPUT</code>.</li>
+    <li>Docker insère ses propres règles dans <code>iptables</code>, sur la chaîne <code>FORWARD</code>.</li>
+    <li>Docker <b>contourne</b> donc UFW.</li>
+  </ul>
+  <div class="note"><b>Solution</b>Filtrer dans la chaîne <code>DOCKER-USER</code>, qui est évaluée <em>avant</em> les règles de publication de Docker : on y place les <code>DROP</code> voulus, et on vérifie qu'ils apparaissent bien en tête de chaîne. En complément, les ports inutiles ont été commentés dans le <code>docker-compose.yml</code> de Mailcow pour ne plus publier que le strict nécessaire.</div>
+
+  <h2>Prioriser le SMTP 587 (STARTTLS)</h2>
+  <p>Par défaut, l'autoconfiguration Mailcow annonce le port 465 (SSL implicite) en premier. Pour mettre le 587 (STARTTLS) en priorité :</p>
+  <ol>
+    <li>Éditer le fichier <code>autoconfig.php</code> et inverser l'ordre des deux blocs <code>outgoingServer</code> pour placer <code>587 / STARTTLS</code> avant <code>465 / SSL</code>.</li>
+    <li>Le fichier sur l'hôte ne suffit pas : il faut le copier dans le conteneur <code>php-fpm</code> avec <code>docker compose cp</code>.</li>
+    <li>Redémarrer <code>php-fpm</code> pour vider le cache opcache, puis vérifier que l'autoconfig renvoie bien 587 en premier.</li>
+  </ol>
+
+  <h2>Mise à jour</h2>
+<pre><code>sudo ./update.sh</code></pre>
+  <div class="note"><b>Après une mise à jour</b>La modification de l'autoconfig vit <em>dans</em> le conteneur : elle est perdue à chaque <code>docker compose pull</code>. Je garde un script <code>post-update.sh</code> dans <code>/opt/mailcow-dockerized/</code> pour la réappliquer automatiquement après chaque mise à jour.</div>
+
+  <a class="back" href="documentation.html">← Toute la documentation</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sauvegarde externe & restauration — Documentation</title>
+<meta name="description" content="Sauvegarde complète d'un VPS vers un disque externe : rétention, structure d'une sauvegarde, restauration complète et restauration partielle (mails, fichiers, bases).">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Documentation · Stack VPS souverain · 8 / 9</div>
+    <h1>Sauvegarde externe &amp; restauration</h1>
+    <div class="wu-meta"><span class="os">Disque externe</span><span>Rétention</span><span>Restauration</span></div>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+
+  <p class="lead">La sauvegarde complète part du PC local vers un disque dur externe. Elle couvre l'intégralité du VPS : mails, fichiers Nextcloud, certificats SSL, bases de données et toutes les configurations.</p>
+
+  <h2>Vue d'ensemble</h2>
+  <ul>
+    <li><b>Rétention</b> — 4 sauvegardes conservées (1 par semaine) ; la plus ancienne est supprimée automatiquement à chaque nouvelle sauvegarde.</li>
+    <li><b>Destination</b> — <code>/media/leo/DISQUE/backups-privatiq/YYYY-MM-DD/</code></li>
+    <li><b>Taille</b> — ~1,9&nbsp;Go par sauvegarde.</li>
+  </ul>
+
+  <h2>Structure d'une sauvegarde</h2>
+<pre><code>2026-05-14/
+├── configs/                      # Tous les fichiers de configuration
+│   ├── mailcow.conf
+│   ├── nextcloud-docker-compose.yml
+│   ├── collabora-docker-compose.yml
+│   ├── turnserver.conf           # Config Coturn
+│   ├── sshd_config
+│   ├── passwd-verify.lua         # Auth Dovecot
+│   ├── postfix-sql/
+│   └── dovecot-sql/
+├── mailcow-data/                 # nginx, rspamd, sogo...
+├── mailcow-ssl/                  # Certificats SSL et clés privées
+├── mailcow-db.sql                # Base de données Mailcow
+├── nextcloud-config/             # config.php
+├── nextcloud-data/               # Apps, thèmes, templates
+├── nextcloud-data-users/         # Fichiers utilisateurs
+├── nextcloud-db.sql              # Base de données Nextcloud
+└── site-vitrine/                 # Fichiers du site</code></pre>
+
+  <h2>Effectuer une sauvegarde</h2>
+  <p>Prérequis : disque externe monté, connexion internet active, clé SSH configurée pour le VPS. Le script lance les <code>rsync</code> et les <code>mysqldump</code>, puis purge la sauvegarde la plus ancienne. L'opération dure 5 à 10 minutes selon la quantité de nouveaux fichiers. On vérifie ensuite la taille et le contenu du dossier daté.</p>
+
+  <h2>Restauration complète (perte totale du VPS)</h2>
+  <p>Contexte : nouveau VPS OVH Ubuntu 24.04, IP éventuellement différente, même domaine. Les étapes :</p>
+  <ol>
+    <li>Préparer le nouveau VPS (paquets, Docker).</li>
+    <li>Restaurer la config SSH et le pare-feu UFW.</li>
+    <li>Restaurer Mailcow (données + base).</li>
+    <li>Restaurer Nextcloud (config, données, base).</li>
+    <li>Restaurer Collabora.</li>
+    <li>Restaurer Coturn.</li>
+    <li>Restaurer le site vitrine.</li>
+    <li>Vérifications finales.</li>
+  </ol>
+
+  <h2>Restauration partielle</h2>
+  <p>On peut ne restaurer qu'une partie :</p>
+  <ul>
+    <li>Uniquement les mails → réimport de la base Mailcow.</li>
+    <li>Uniquement les fichiers d'un utilisateur Nextcloud → copie du dossier utilisateur, suivie d'un <code>files:scan</code>.</li>
+    <li>Uniquement la base Nextcloud → réimport du dump SQL.</li>
+  </ul>
+
+  <div class="note"><b>Points importants</b>Si l'IP du nouveau VPS change, mettre à jour les DNS OVH avant de démarrer les services. Les certificats sont sauvegardés, mais Let's Encrypt peut les régénérer via acme — ne pas forcer si les certs restants sont encore valides (90 jours). Après restauration Nextcloud, un <code>files:scan --all</code> est obligatoire pour réindexer les fichiers restaurés.</div>
+
+  <a class="back" href="documentation.html">← Toute la documentation</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

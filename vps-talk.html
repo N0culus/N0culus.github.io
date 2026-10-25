@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nextcloud Talk & Coturn — Documentation</title>
+<meta name="description" content="Visioconférence Nextcloud Talk avec un serveur TURN/STUN Coturn : secret d'authentification, ouverture des ports, vérification et configuration Talk.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Documentation · Stack VPS souverain · 6 / 9</div>
+    <h1>Nextcloud Talk &amp; Coturn</h1>
+    <div class="wu-meta"><span class="os">Coturn</span><span>TURN / STUN</span><span>WebRTC</span></div>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+
+  <p class="lead">Nextcloud Talk a besoin d'un serveur TURN/STUN pour que la visio traverse les NAT. On installe Coturn, on génère un secret partagé, on ouvre les bons ports — l'étape la plus critique — puis on le branche dans Talk.</p>
+
+  <h2>Installer l'application et Coturn</h2>
+  <p>Dans Nextcloud : <em>Administration → Applications → Talk → Activer</em>. Puis sur le VPS :</p>
+<pre><code>sudo apt install coturn -y</code></pre>
+  <p>On génère un secret d'authentification (à conserver, il servira dans la config et dans Nextcloud) :</p>
+<pre><code>openssl rand -hex 32</code></pre>
+
+  <h2>Configurer Coturn</h2>
+  <p>Dans <code>/etc/turnserver.conf</code>, on décommente et renseigne : le port d'écoute <code>3478</code>, le mécanisme d'authentification par secret (<code>use-auth-secret</code> + <code>static-auth-secret</code>), le <code>realm</code> du domaine et l'activation du <code>fingerprint</code>. On active ensuite le service :</p>
+<pre><code>sudo systemctl enable --now coturn</code></pre>
+
+  <h2>Ouvrir les ports (étape critique)</h2>
+  <p>Coturn peut tourner tout en étant injoignable : sans ouverture pare-feu, Talk ne fonctionne pas.</p>
+<pre><code>sudo ufw allow 3478/tcp
+sudo ufw allow 3478/udp
+sudo ufw allow 5349/tcp
+sudo ufw allow 5349/udp</code></pre>
+
+  <h2>Vérifier</h2>
+  <p>Un test de boucle TURN doit afficher <code>Total lost packets 0 (0.000000%)</code>.</p>
+
+  <h2>Configurer Talk dans Nextcloud</h2>
+  <p><em>Administration → Talk</em>, sans préfixe <code>turn://</code> ni <code>https://</code> dans l'URL — uniquement <code>domaine:port</code> :</p>
+  <div class="wu-table"><table>
+    <thead><tr><th>Serveur STUN</th><th>Valeur</th></tr></thead>
+    <tbody><tr><td>URL</td><td><code>&lt;DOMAINE&gt;:3478</code></td></tr></tbody>
+  </table></div>
+  <div class="wu-table"><table>
+    <thead><tr><th>Serveur TURN</th><th>Valeur</th></tr></thead>
+    <tbody>
+      <tr><td>Protocole</td><td><code>turn:</code> et <code>turns:</code></td></tr>
+      <tr><td>URL</td><td><code>&lt;DOMAINE&gt;:3478</code></td></tr>
+      <tr><td>Secret</td><td>le secret généré</td></tr>
+      <tr><td>Protocole réseau</td><td>UDP et TCP</td></tr>
+    </tbody>
+  </table></div>
+  <p>On teste en rejoignant un appel : si l'appel passe, Coturn est opérationnel.</p>
+
+  <div class="note"><b>Faux négatifs connus</b>Le bouton de test ⚡ de l'interface Talk peut afficher un warning orange alors que Coturn fonctionne. De même, les erreurs <code>401 Unauthorized</code> dans les logs sont <b>normales</b> : elles font partie du protocole d'authentification TURN (challenge-response). On se fie aux logs réels et au test en appel.</div>
+
+  <a class="back" href="documentation.html">← Toute la documentation</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

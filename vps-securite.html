@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audit de sécurité du VPS — Documentation</title>
+<meta name="description" content="Audit de sécurité d'un VPS auto-hébergé : exposition des services, pare-feu UFW, durcissement SSH, Fail2ban, comptes, isolation Docker, permissions et mises à jour.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Documentation · Stack VPS souverain · 9 / 9</div>
+    <h1>Audit de sécurité du VPS</h1>
+    <div class="wu-meta"><span class="os">UFW · Fail2ban</span><span>SSH durci</span><span>Isolation Docker</span></div>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+
+  <p class="lead">Documentation de l'état de sécurité du VPS : ce qui est exposé, pourquoi, et les mesures qui réduisent la surface d'attaque. Le principe directeur : ne publier que le strict nécessaire et tout isoler derrière le pare-feu.</p>
+
+  <h2>Exposition des services</h2>
+  <div class="wu-table"><table>
+    <thead><tr><th>Service</th><th>Exposition</th><th>Port</th></tr></thead>
+    <tbody>
+      <tr><td>SSH</td><td>Public (port custom)</td><td>51478/tcp</td></tr>
+      <tr><td>HTTP / HTTPS</td><td>Public</td><td>80, 443/tcp</td></tr>
+      <tr><td>SMTP / submission</td><td>Public</td><td>25, 587/tcp</td></tr>
+      <tr><td>IMAPS</td><td>Public</td><td>993/tcp</td></tr>
+      <tr><td>TURN/STUN · TURNS</td><td>Public</td><td>3478, 5349 (tcp+udp)</td></tr>
+      <tr><td>Redis</td><td>Localhost uniquement</td><td>127.0.0.1:7654</td></tr>
+      <tr><td>MariaDB (Mailcow)</td><td>Localhost uniquement</td><td>127.0.0.1:13306</td></tr>
+      <tr><td>MariaDB (Nextcloud)</td><td>Réseau Docker interne</td><td>3306</td></tr>
+      <tr><td>Nextcloud · Collabora</td><td>Réseau Docker interne</td><td>172.17.0.1:8080 · :9980</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Pare-feu (UFW)</h2>
+  <div class="wu-table"><table>
+    <thead><tr><th>Port</th><th>Action</th><th>Justification</th></tr></thead>
+    <tbody>
+      <tr><td>22/tcp</td><td>DENY</td><td>Port SSH standard bloqué</td></tr>
+      <tr><td>51478/tcp</td><td>ALLOW</td><td>Port SSH custom</td></tr>
+      <tr><td>25 · 587/tcp</td><td>ALLOW</td><td>Réception / envoi d'emails</td></tr>
+      <tr><td>80 · 443/tcp</td><td>ALLOW</td><td>HTTP → HTTPS (Mailcow, Nextcloud, Collabora)</td></tr>
+      <tr><td>993/tcp</td><td>ALLOW</td><td>IMAPS</td></tr>
+      <tr><td>110 · 143 · 995 · 4190/tcp</td><td>DENY</td><td>POP3/IMAP non chiffrés & Sieve — désactivés</td></tr>
+      <tr><td>3478 · 5349</td><td>ALLOW</td><td>Coturn STUN/TURN/TURNS (Nextcloud Talk)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>SSH</h2>
+  <ul>
+    <li><b>Port non standard</b> — réduit drastiquement les tentatives automatisées.</li>
+    <li><b>Clé uniquement</b> — rend le brute-force inutile.</li>
+    <li><b>AllowUsers</b> — restreint SSH aux seuls comptes autorisés, même si d'autres comptes système existent.</li>
+  </ul>
+
+  <h2>Fail2ban</h2>
+  <div class="wu-table"><table>
+    <thead><tr><th>Jail</th><th>Service protégé</th></tr></thead>
+    <tbody>
+      <tr><td>sshd</td><td>Tentatives SSH échouées</td></tr>
+      <tr><td>postfix</td><td>Tentatives SMTP abusives</td></tr>
+      <tr><td>dovecot</td><td>Tentatives IMAP échouées</td></tr>
+      <tr><td>nginx-http-auth</td><td>Tentatives d'auth HTTP échouées</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Comptes utilisateurs</h2>
+  <div class="wu-table"><table>
+    <thead><tr><th>Utilisateur</th><th>Sudo</th><th>Rôle</th></tr></thead>
+    <tbody>
+      <tr><td>root</td><td>—</td><td>Superutilisateur système</td></tr>
+      <tr><td>ubuntu</td><td>oui</td><td>Compte OVH par défaut</td></tr>
+      <tr><td>leo</td><td>oui</td><td>Administrateur principal</td></tr>
+      <tr><td>will</td><td>oui</td><td>Collaborateur</td></tr>
+    </tbody>
+  </table></div>
+  <p>Authentification par clé uniquement pour tous les comptes, aucune connexion par mot de passe, et les comptes système (<code>www-data</code>…) sont en <code>nologin</code>.</p>
+
+  <h2>Isolation Docker</h2>
+  <p>Aucun service interne (base de données, cache) n'est exposé sur une interface publique :</p>
+  <ul>
+    <li>Redis → <code>127.0.0.1:7654</code> uniquement.</li>
+    <li>MariaDB Mailcow → <code>127.0.0.1:13306</code> uniquement.</li>
+    <li>MariaDB Nextcloud → réseau Docker interne uniquement.</li>
+    <li>Nextcloud / Collabora → <code>172.17.0.1</code> (bridge Docker, inaccessible depuis Internet).</li>
+  </ul>
+
+  <h2>Permissions des fichiers sensibles</h2>
+  <div class="wu-table"><table>
+    <thead><tr><th>Fichier</th><th>Permissions</th><th>Propriétaire</th></tr></thead>
+    <tbody>
+      <tr><td><code>mailcow.conf</code></td><td>600</td><td>root:root</td></tr>
+      <tr><td><code>nextcloud/docker-compose.yml</code></td><td>600</td><td>root:root</td></tr>
+      <tr><td><code>collabora/docker-compose.yml</code></td><td>600</td><td>root:root</td></tr>
+      <tr><td><code>/etc/turnserver.conf</code></td><td>640</td><td>root:turnserver</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Mises à jour & exploitation</h2>
+  <ul>
+    <li><code>unattended-upgrades</code> applique automatiquement les correctifs de sécurité.</li>
+    <li>Mises à jour manuelles régulières ; redémarrage nécessaire après une mise à jour du kernel.</li>
+    <li>Checklist de vérification à effectuer une fois par mois (règles UFW, jails Fail2ban, IP bannies, logs d'accès nginx).</li>
+  </ul>
+  <div class="note"><b>En cas d'incident</b>Bannir manuellement une IP via Fail2ban, consulter la liste des IP bannies, débannir si besoin, et croiser avec les logs d'accès nginx pour qualifier l'activité.</div>
+
+  <a class="back" href="documentation.html">← Toute la documentation</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>

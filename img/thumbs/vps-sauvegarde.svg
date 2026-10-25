@@ -3,8 +3,8 @@
 <rect width="400" height="250" fill="#f3f1ea"/>
 <rect width="400" height="46" fill="#2a7d6b"/>
 <text x="24" y="29" class="tt" font-size="11" letter-spacing="1.2" fill="#ffffff">VPS &amp; AUTO-HÉBERGEMENT</text>
-<text x="24" y="111" class="h ink" font-size="26" letter-spacing="-.4">Sauvegarde et</text><text x="24" y="145" class="h ink" font-size="26" letter-spacing="-.4">restauration</text>
+<text x="24" y="111" class="h ink" font-size="26" letter-spacing="-.4">Sauvegarde</text><text x="24" y="145" class="h ink" font-size="26" letter-spacing="-.4">&amp; restauration</text>
 <line x1="24" y1="206" x2="376" y2="206" stroke="#cfcbc0" stroke-width="1.5"/>
-<text x="24" y="228" class="tt ink" font-size="12" letter-spacing="1.5">PDF</text>
+<text x="24" y="228" class="tt ink" font-size="12" letter-spacing="1.5">DOC</text>
 <text x="68" y="228" class="tt muted" font-size="12" letter-spacing="1">· Mémoire</text>
 </svg>

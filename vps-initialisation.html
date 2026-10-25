@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Initialisation d'un VPS — Documentation</title>
+<meta name="description" content="Mise en route d'un VPS OVH : création d'un utilisateur dédié, connexion par clé SSH, durcissement de sshd et activation du pare-feu UFW.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="img/photo.png" type="image/png">
+</head>
+<body data-page="memo">
+<nav>
+  <div class="wrap">
+    <a href="index.html" class="logo"><span class="mk">LG</span>Léo Gauthier</a>
+    <button class="burger" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    <ul class="links"><li><a href="index.html">Accueil</a></li><li class="dd"><a href="index.html#parcours">Parcours</a><ul class="dd-menu"><li><a href="formation-bts.html">BTS SIO option SISR<small>2022 – 2024</small></a></li><li><a href="formation-bachelor.html">Bachelor Développeur Solutions Numériques Sécurisées<small>2024 – 2025</small></a></li><li><a href="formation-manager.html">Manager en Ingénierie Informatique, Cybersécurité<small>2025 – 2027 · en cours</small></a></li><li><a href="entreprise-alternance.html">Alternance — Absys Informatique<small>2022 – présent</small></a></li></ul></li><li><a href="index.html#projets">Projets</a></li><li><a href="ctf.html">CTF</a></li><li><a href="documentation.html">Documentation</a></li><li><a href="aide-memoire.html">Mémo</a></li><li><a href="index.html#contact">Contact</a></li></ul>
+  </div>
+</nav>
+<main>
+<header class="page-head">
+  <div class="wrap">
+    <div class="meta">Documentation · Stack VPS souverain · 1 / 9</div>
+    <h1>Initialisation d'un VPS</h1>
+    <div class="wu-meta"><span class="os">OVH · Ubuntu 24.04</span><span>SSH</span><span>Durcissement</span><span>UFW</span></div>
+  </div>
+</header>
+<section class="sub"><div class="wrap wu">
+
+  <p class="lead">Mise en route d'un VPS OVH neuf : on commande la machine, on crée un utilisateur dédié, on bascule l'authentification sur clé SSH, on durcit le démon <code>sshd</code> et on referme tout derrière le pare-feu avant d'installer quoi que ce soit.</p>
+
+  <h2>Commande et premier accès</h2>
+  <ul>
+    <li>Création d'un compte chez OVH puis commande du VPS.</li>
+    <li>Réception d'un mail avec l'identifiant et le mot de passe initiaux.</li>
+    <li>Première connexion SSH sur le port 22 avec le mot de passe fourni.</li>
+  </ul>
+
+  <h2>Création d'un utilisateur dédié</h2>
+  <p>On évite de travailler en <code>root</code> : deux comptes d'administration, ajoutés au groupe <code>sudo</code>.</p>
+<pre><code>adduser will
+usermod -aG sudo will
+adduser leo
+usermod -aG sudo leo</code></pre>
+
+  <h2>Connexion par clé plutôt que par mot de passe</h2>
+  <p>On copie sa clé publique sur le serveur (le port SSH sera déplacé sur 51478, voir plus bas) :</p>
+<pre><code>ssh-copy-id will@IP_VPS -p 51478
+ssh-copy-id leo@IP_VPS -p 51478</code></pre>
+
+  <h2>Durcissement de sshd</h2>
+  <p>OVH dépose une configuration cloud-init qui réactive l'authentification par mot de passe. On la supprime d'abord :</p>
+<pre><code>sudo rm /etc/ssh/sshd_config.d/50-cloud-init.conf</code></pre>
+  <p>Puis on applique les réglages de sécurité dans <code>/etc/ssh/sshd_config</code> :</p>
+<pre><code>Port 51478
+PermitRootLogin no
+PasswordAuthentication no
+X11Forwarding no</code></pre>
+  <ul>
+    <li>Port SSH déplacé sur <code>51478</code> pour réduire le bruit des scans automatisés.</li>
+    <li>Connexion <code>root</code> directe interdite.</li>
+    <li>Authentification par mot de passe désactivée : clé uniquement.</li>
+    <li><code>X11Forwarding</code> coupé, inutile sur un serveur.</li>
+  </ul>
+  <p>Un fichier de configuration de durcissement dédié a été ajouté, puis le service <code>ssh.service</code> activé et démarré. La socket <code>ssh.socket</code> a été désactivée et masquée pour éviter qu'elle ne reprenne la main sur un port aléatoire, et les anciens processus <code>sshd</code> ont été nettoyés avant le redémarrage.</p>
+  <div class="note"><b>Panne volontaire</b>En tuant tous les <code>sshd</code> pour repartir sur une configuration propre, je me suis coupé la main. Un redémarrage du VPS depuis l'espace OVH a suffi à relancer un SSH propre sur le bon port.</div>
+
+  <h2>Pare-feu UFW</h2>
+  <p>UFW était <b>inactif</b> à la livraison. Activation sécurisée en autorisant d'abord le port SSH custom <code>51478</code> <em>avant</em> d'activer le pare-feu, pour ne pas se verrouiller dehors. Les ports des services seront ouverts au fur et à mesure de leur installation.</p>
+
+  <a class="back" href="documentation.html">← Toute la documentation</a>
+</div></section>
+</main>
+<footer>© <span id="y"></span> Léo Gauthier — Avignon</footer>
+<script src="script.js" defer></script>
+</body>
+</html>
