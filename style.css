@@ -118,7 +118,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:6
 .skills{display:grid;gap:0;border-top:2px solid var(--ink)}
 .group{display:grid;grid-template-columns:13.5rem 1fr;gap:1.5rem;padding:1.1rem .2rem;border-bottom:1px solid var(--line);align-items:start}
 .group h3{display:flex;align-items:baseline;gap:.5rem;font-family:var(--mono);font-size:.78rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;font-stretch:100%;color:var(--muted);padding-top:.35rem}
-.group h3::before{content:counter(grp,decimal-leading-zero);counter-increment:grp;color:var(--accent)}
+.group h3::before{content:counter(grp,upper-alpha);counter-increment:grp;color:var(--accent)}
 .skills{counter-reset:grp}
 .group h3 i{display:none}
 .chips{display:flex;flex-wrap:wrap;align-items:flex-start;align-content:flex-start;gap:.4rem}
@@ -159,7 +159,7 @@ footer{border-top:2px solid var(--ink);padding:1.6rem 0;text-align:center;font-f
 .sub{padding:2.5rem 0}
 .sub h2{font-size:clamp(1.4rem,3vw,1.9rem);margin-bottom:1.5rem}
 .panel{background:var(--bg2);border:1px solid var(--line);padding:1.7rem}
-.panel p{color:var(--soft);max-width:66ch;margin-bottom:1rem}
+.panel p{color:var(--soft);margin-bottom:1rem}
 .panel h3{font-size:1.3rem;margin-bottom:.4rem}
 .facts{display:flex;flex-wrap:wrap;gap:1.5rem 2.5rem;margin:1.4rem 0}
 .facts div{border-left:3px solid var(--accent);padding-left:.9rem;max-width:22rem}
