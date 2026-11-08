@@ -21,7 +21,7 @@ body[data-page="home"] section > .wrap > h2::before{counter-increment:sec;conten
 nav{position:fixed;inset:0 0 auto 0;z-index:50;background:rgba(238,236,229,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--ink)}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;max-width:1180px}
 .logo{display:flex;align-items:center;gap:.6rem;font-weight:700;font-stretch:85%;font-size:1.05rem;text-transform:uppercase;letter-spacing:.02em}
-.logo .mk{display:grid;place-items:center;width:2rem;height:2rem;background:var(--ink);color:var(--bg);font-family:var(--mono);font-size:.8rem;font-weight:500;letter-spacing:0}
+.logo .mk{width:2rem;height:2rem;border-radius:50%;object-fit:cover;object-position:center 20%;border:1.5px solid var(--ink);display:block;flex:none}
 .links{display:flex;gap:1.5rem;list-style:none}
 .links a{font-size:.9rem;color:var(--muted);padding:.3rem 0;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
 .links a:hover,.links a.active{color:var(--ink);border-color:var(--accent)}
